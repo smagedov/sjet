@@ -131,9 +131,9 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libase_la_LIBADD =
-am_libase_la_OBJECTS = diffusionFactor2.lo
-libase_la_OBJECTS = $(am_libase_la_OBJECTS)
+libfastjetdiffusion_la_LIBADD =
+am_libfastjetdiffusion_la_OBJECTS = diffusionFactor2.lo
+libfastjetdiffusion_la_OBJECTS = $(am_libfastjetdiffusion_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -173,8 +173,8 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(libase_la_SOURCES)
-DIST_SOURCES = $(libase_la_SOURCES)
+SOURCES = $(libfastjetdiffusion_la_SOURCES)
+DIST_SOURCES = $(libfastjetdiffusion_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -324,10 +324,10 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CXXFLAGS = -O3
-lib_LTLIBRARIES = libase.la
-libase_la_SOURCES = diffusionFactor2.cc
+lib_LTLIBRARIES = libfastjetdiffusion.la
+libfastjetdiffusion_la_SOURCES = diffusionFactor2.cc
 AM_CPPFLAGS = -I@top_srcdir@/
-include_HEADERS = diffusionFactor2.h ClusteringSequence.hh DiffusionDistFastJet.hh DistanceCalculator.hh CmdLine.hh
+include_HEADERS = diffusionFactor2.h ClusteringSequence.hh DiffusionDistFastJet.hh DistanceCalculator.hh
 all: all-am
 
 .SUFFIXES:
@@ -397,8 +397,8 @@ clean-libLTLIBRARIES:
 	  rm -f $${locs}; \
 	}
 
-libase.la: $(libase_la_OBJECTS) $(libase_la_DEPENDENCIES) $(EXTRA_libase_la_DEPENDENCIES) 
-	$(AM_V_CXXLD)$(CXXLINK) -rpath $(libdir) $(libase_la_OBJECTS) $(libase_la_LIBADD) $(LIBS)
+libfastjetdiffusion.la: $(libfastjetdiffusion_la_OBJECTS) $(libfastjetdiffusion_la_DEPENDENCIES) $(EXTRA_libfastjetdiffusion_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(CXXLINK) -rpath $(libdir) $(libfastjetdiffusion_la_OBJECTS) $(libfastjetdiffusion_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
