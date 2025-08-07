@@ -22,8 +22,6 @@ using namespace fastjet;
 
 namespace stab {
 
-namespace stab {
-
 class DiffBriefJet {
 public:
   void init(const fastjet::PseudoJet &jet ) {
