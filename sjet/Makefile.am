@@ -1,8 +1,8 @@
 AM_CXXFLAGS = -O3
 
-lib_LTLIBRARIES = libfastjetdiffusion.la
+lib_LTLIBRARIES = libjetdiffusion.la
 
-libfastjetdiffusion_la_SOURCES = diffusionFactor2.cc
+libjetdiffusion_la_SOURCES = diffusionFactor2.cc
 
 AM_CPPFLAGS = -I@top_srcdir@/
 
