@@ -1,5 +1,5 @@
-#ifndef SM_DISTANCECALCULATOR_HH_
-#define SM_DISTANCECALCULATOR_HH_
+#ifndef SJET_DISTANCECALCULATOR_HH_
+#define SJET_DISTANCECALCULATOR_HH_
 
 #include <algorithm>
 #include "rk/rk.hh"
@@ -17,4 +17,4 @@ namespace sjet {
 	};
 }
 
-#endif // SM_DISTANCECALCULATOR_HH_
+#endif // SJET_DISTANCECALCULATOR_HH_

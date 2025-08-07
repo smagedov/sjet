@@ -1,5 +1,5 @@
-#ifndef DiffusionDistFastJet_hh
-#define DiffusionDistFastJet_hh
+#ifndef SJET_DIFFUSIONDISTFASTJET_hh
+#define SJET_DIFFUSIONDISTFASTJET_hh
 
 //////////////////////////////////////////
 /// Wrapper to interface the diffusion distance
@@ -18,9 +18,7 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
 
-using namespace fastjet;
-
-namespace stab {
+namespace sjet {
 
 class DiffBriefJet {
 public:
@@ -151,7 +149,7 @@ void DiffusionDistFastJet::run_clustering(ClusterSequence &seq) const
 };
 
 
-} // end stab namespace
+} // end sjet namespace
 
 
 #endif

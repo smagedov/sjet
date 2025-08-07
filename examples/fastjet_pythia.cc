@@ -79,8 +79,8 @@ int main(int argc, char *argv[]) {
 	pythiaPU.readString("SoftQCD:inelastic = on");
 	if (mu > 0) pythiaPU.init();
 
-	stab::DiffusionDistFastJet stab(maxDistance);
-        fastjet::JetDefinition jet_def(&stab);;
+	sjet::DiffusionDistFastJet sjet(maxDistance);
+        fastjet::JetDefinition jet_def(&sjet);;
 
 	std::vector<std::vector<fastjet::PseudoJet>> stbl_events;
 

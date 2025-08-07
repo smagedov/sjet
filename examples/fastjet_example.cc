@@ -51,8 +51,8 @@ int main(){
 	cout << input_particles.size() << endl;
 
 	double maxDist = 0.25;
-	stab::DiffusionDistFastJet stab(maxDist);
-	fastjet::JetDefinition jet_def(&stab);
+	sjet::DiffusionDistFastJet sjet(maxDist);
+	fastjet::JetDefinition jet_def(&sjet);
 
 	fastjet::ClusterSequence clust_seq(input_particles, jet_def);
 

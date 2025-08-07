@@ -1,5 +1,5 @@
-#ifndef SM_CLUSTERINGSEQUENCE_HH_
-#define SM_CLUSTERINGSEQUENCE_HH_
+#ifndef SJET_CLUSTERINGSEQUENCE_HH_
+#define SJET_CLUSTERINGSEQUENCE_HH_
 
 #include <cmath>
 #include <cassert>
@@ -174,4 +174,4 @@ namespace sjet {
 
 }
 
-#endif // SM_CLUSTERINGSEQUENCE_HH_
+#endif // SJET_CLUSTERINGSEQUENCE_HH_
