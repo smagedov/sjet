@@ -22,7 +22,7 @@ all: libjetdiffusion.so $(BINARIES)
 
 $(BINARIES): % : %.o $(OFILES); g++ $(OPTIMIZE) -fPIC -o $@ $^ -w -L. -lfastjetdiffusion $(LIBS) -std=c++11 -pedantic -W -Wall -Wshadow -pthread -Wl,-rpath,../li -Wl,-rpath,/home/smagedov/local/lib -Wl,-rpath,/usr/local/root/lib -pthread -std=c++17 -m64 -Wl,-rpath,/usr/local/root/lib -pthread -rdynamic -DPY8ROOT
 
-libfastjetdiffusion.so: $(OFILES)
+libjetdiffusion.so: $(OFILES)
 	g++ -shared -o $@ $^ $(LIBS)
 
 clean:
