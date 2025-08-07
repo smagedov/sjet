@@ -2,7 +2,7 @@ AM_CXXFLAGS = -O3
 
 lib_LTLIBRARIES = libase.la
 
-libase_la_SOURCES = diffusionFactor2.cc DiffusionDistFastJet.cc
+libase_la_SOURCES = diffusionFactor2.cc
 
 AM_CPPFLAGS = -I@top_srcdir@/
 

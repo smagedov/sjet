@@ -101,44 +101,6 @@ namespace sjet {
 				return true;
 			}
 
-			double stability(int index) {
-				double stab1;
-				double stab2;
-				double dist1 = clustHist_[index].dist();
-				int fp1 = clustHist_[index].parent1();
-				int fp2 = clustHist_[index].parent2();
-				double distp1 = clustHist_[fp1].dist();
-				if (distp1 != -1.0) {
-					stab1 = std::log(dist1/distp1);
-				} else {
-					stab1 = 0.0;
-				}
-				double distp2 = clustHist_[fp2].dist();
-				if (distp2 != -1.0) {
-					stab2 = std::log(dist1/distp2);
-				} else {
-					stab2 = 0.0;
-				}
-//				std::cout << "dist1: " << dist1 << " fp1: " << fp1 << " distp1: " << distp1 << " stab1: " << stab1 << " fp2: " << fp2 << " distp2: " << distp2 << " stab2: " << stab2 << std::endl;
-				if (distp1 != -1.0 || distp2 != -1.0) {
-					if (stab1 > stab2) {
-//						std::cout << "Parent 1: " << stab1 << " index: " << fp1 << std::endl;
-						return stab1 + stability(fp1);
-					} else {
-//						std::cout << "Parent 2: " << stab2 << " index: " << fp2 << std::endl;
-						return stab2 + stability(fp2);
-					}
-				} else {
-					if (stab1 > stab2) {
-//						std::cout << "Parent 1: " << stab1 << " index: " << fp1 << std::endl;
-						return stab1;
-					} else {
-//						std::cout << "Parent 2: " << stab2 << " index: " << fp2 << std::endl;
-						return stab2;
-					}
-				}
-			}
-
 			inline double nextDistance() const {
 				if (distSet_.empty())  {
 					return -1.0;

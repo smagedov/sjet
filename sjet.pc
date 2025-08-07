@@ -1,0 +1,10 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: sjet
+Description: Stable Jet
+Version: 0.1
+Libs: -L${libdir} -lase
+Cflags: -I${includedir}
