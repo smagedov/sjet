@@ -6,8 +6,8 @@
 #include <cstdlib>
 #include <cmath>
 #include "CmdLine.hh"
-#include "DistanceCalculator.hh"
-#include "ClusteringSequence.hh"
+#include "sjet/DistanceCalculator.hh"
+#include "sjet/ClusteringSequence.hh"
 #include "Pythia8/Pythia.h"
 
 //======================================================================

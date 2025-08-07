@@ -3,7 +3,7 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/config.h"
-#include "DiffusionDistFastJet.hh"
+#include "sjet/DiffusionDistFastJet.hh"
 #include "CmdLine.hh"
 
 //==========================================================================

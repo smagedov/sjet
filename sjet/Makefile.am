@@ -1,11 +1,11 @@
 AM_CXXFLAGS = -O3
 
-lib_LTLIBRARIES = libjetdiffusion.la
+lib_LTLIBRARIES = libsjet.la
 
-libjetdiffusion_la_SOURCES = diffusionFactor2.cc
+libsjet_la_SOURCES = diffusionFactor2.cc
 
 AM_CPPFLAGS = -I@top_srcdir@/
 
-includedir = ${prefix}/include/src
+includedir = ${prefix}/include/sjet
 
 include_HEADERS = diffusionFactor2.h ClusteringSequence.hh DiffusionDistFastJet.hh DistanceCalculator.hh

@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <cmath>
 #include "CmdLine.hh"
-#include "DistanceCalculator.hh"
+#include "sjet/DistanceCalculator.hh"
 #include "ClusteringSequence.hh"
 
 using namespace std;

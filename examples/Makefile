@@ -7,7 +7,7 @@ FASTJETCPPFLAGS := $(shell $(FASTJETCONFIG) --cxxflags)
 
 LOCALLIBS = /home/smagedov/local/lib
 OPTIMIZE = -O2
-CPPFLAGS = $(OPTIMIZE) -I. $(FASTJETCPPFLAGS) -I../include -I$(LOCALLIBS)/../include -I/usr/local/root/include -I/home/smagedov/StableJet/sjet/sjet
+CPPFLAGS = $(OPTIMIZE) -I. $(FASTJETCPPFLAGS) -I../include -I$(LOCALLIBS)/../include -I/usr/local/root/include -I../sjet
 LIBS = -L$(LOCALLIBS) -lrk -lm -L../lib -lpythia8 -ldl -L/home/smagedov/local/lib -lfastjet -L/usr/local/root/lib -lCore -L/usr/local/root/lib -lGui -lCore -lImt -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lROOTVecOps -lTree -lTreePlayer -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lROOTNTuple -lMultiProc -lROOTDataFrame -lROOTNTupleUtil -ldl
 
 PROGRAMS = slow_example.cc slow_pythia.cc fastjet_example.cc fastjet_pythia.cc
@@ -18,11 +18,11 @@ PROGRAMS = slow_example.cc slow_pythia.cc fastjet_example.cc fastjet_pythia.cc
 
 BINARIES = $(PROGRAMS:.cc=)
 
-all: libjetdiffusion.so $(BINARIES)
+all: libsjet.so $(BINARIES)
 
 $(BINARIES): % : %.o $(OFILES); g++ $(OPTIMIZE) -fPIC -o $@ $^ -w -L. -lfastjetdiffusion $(LIBS) -std=c++11 -pedantic -W -Wall -Wshadow -pthread -Wl,-rpath,../li -Wl,-rpath,/home/smagedov/local/lib -Wl,-rpath,/usr/local/root/lib -pthread -std=c++17 -m64 -Wl,-rpath,/usr/local/root/lib -pthread -rdynamic -DPY8ROOT
 
-libjetdiffusion.so: $(OFILES)
+libsjet.so: $(OFILES)
 	g++ -shared -o $@ $^ $(LIBS)
 
 clean:

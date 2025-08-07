@@ -10,7 +10,7 @@
 #include <algorithm>
 
 #include "fastjet/config.h"
-#include "DiffusionDistFastJet.hh"
+#include "sjet/DiffusionDistFastJet.hh"
 
 using namespace std;
 
