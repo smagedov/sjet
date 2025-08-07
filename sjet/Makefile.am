@@ -1,6 +1,6 @@
 AM_CXXFLAGS = -O3
 
-lib_LTLIBRARIES = libase.la
+lib_LTLIBRARIES = libfastejetdiffusion.so
 
 libase_la_SOURCES = diffusionFactor2.cc
 

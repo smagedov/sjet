@@ -110,7 +110,7 @@ namespace sjet {
 			}
 
 			inline double lastDistance() const {
-				if (distSet_.empty()) {
+				if (clustHist_.empty()) {
 					return -1.0;
 				} else {
 					return clustHist_.back().dist();
