@@ -1,0 +1,125 @@
+This directory contains a minimalistic framework for working with
+"events". Unfortunately, C++ does not provide universal containers
+(like the "dict" class in Python), so the content of the event has
+to be defined at the compile time. "Events" are arbitrary structures
+which should implement a few required methods (dealing, in particular,
+with event numbers). Read the file "MinimalEvent.hh" for a simple
+example of this.
+
+Events are filled out with data and analyzed by "modules". To support
+uniform handling of the events, the module classes have to be derived
+from the framework abstract classes: AbsFrameworkModule,
+AbsFrameworkAnalyzer, or AbsTextDump (these classes live in the "frw"
+namespace).
+
+Unless mentioned otherwise, all classes are defined in their own
+separate header files. For example, the header file corresponding
+to class AbsFrameworkModule is named "AbsFrameworkModule.hh".
+
+AbsFrameworkModule is the top-level abstract base class for all
+framework modules. You need to inherit from this base class if
+your module is supposed to modify the event data. See the file
+"MinimalEventMaker.hh" for a simple example of such a module.
+
+AbsFrameworkAnalyzer is the abstract base class for modules which
+use the event data but do not modify them. AbsFrameworkAnalyzer
+itself inherits from AbsFrameworkModule.
+
+AbsTextDump is the abstract base class for modules which print
+their output into a text file and do not modify event data
+(AbsTextDump inherits from AbsFrameworkAnalyzer). See the file
+"MinimalEventPrinter.hh" for an example of such a module.
+
+The concrete module class "EventCounter" can be used to monitor
+the progress of your program or, if you have filters in the
+event processing sequence, to count events passing through
+various stages of this sequence.
+
+Various modules are templated on the event type. This means that
+modules can be reused with different event types as long as these
+types have relevant data sections in them.
+
+Modules run sequentially on the event data. The sequencing is
+performed by the "FrameworkAnalysisSequence" class. It is expected
+that an instance of this class is created by the main program, various
+modules added to the sequence, and then the program iterates over
+events. See the program "testEventProcessingFramework.cc" for an
+example of this.
+
+At the current moment, the framework does not provide the I/O facilities
+for the events. If this will be deemed necessary in the future, such
+facilities will be added (using, for example, the "Geners" package
+from geners.hepforge.org). For simple studies, however, it is good
+to avoid this additional dependency on an external I/O library.
+
+Currently, the framework can be used to study the behavior of our
+jet reconstruction algorithm with "Gaussian dijet" events. "Gaussian
+jets" are jets with Gaussian pt profile in the eta-phi space. These
+jets are not physical, they are just convenient structures to play
+with because we understand everything about them. The performance of
+our algorithm should be optimized for these jets before looking into
+more realistic scenarios.
+
+"Gaussian dijet" events contain three components: two Gaussian
+jets (called "reference jet" and "probe jet") and pileup. When
+these objects are generated, their various parameters (width,
+average particle pt, multiplicity, delta R between jets in the
+eta-phi space, etc) can be configured from the command line.
+The configuration parameters are then passed to the "DijetMaker"
+module which generates the corresponding set of particles. Run
+the program "gaussianDijetStudy" without any arguments to print
+various options and usage instructions. A csh script
+"run_gaussianDijetStudy.csh" gives an example of running this
+program with a complete set of arguments.
+
+"gaussianDijetStudy" is using the DijetEvent class as the framework
+event structure. This structure is filled and analyzed by the
+following sequence of modules:
+
+DijetMaker                This module generates the particles forming
+                          the two Gaussian jets and the pileup.
+
+RunDiffusionClustering    This module runs the "slow" clustering
+                          algorithm.
+
+GenParticleDump           This module can be used to dump the
+                          particles created by DijetMaker into a file
+                          (in a text form). This is useful for
+                          visualizing the average energy flow.
+
+GenJetsMaker              This module calculates the 4-vectors of the
+                          Gaussian jets.
+
+SimpleJetMaker            This module utilizes the results of the slow
+                          clustering algorithm and forms jets by simply
+                          imposing a recombination distance cutoff.
+
+RandJaccardMMDCalculator  This module calculates the pt-weighted Rand,
+                          Jaccard, and MMD distances between the known
+                          clusters generated by DijetMaker and the
+                          clusters created by SimpleJetMaker. See the
+                          paper "Detection of Clustering Instabilities
+                          for Sequential Recombination Algorithms" by Cowden
+                          and Volobouev where these concepts are described.
+
+CalcAndPrint              This module calculates various things (like
+                          delta R between original and reconstructed
+                          jets) and dumps them into a file in a text
+                          format.
+
+EventCounter              Can be inserted in various locations in the
+                          processing sequence to print event counts, etc.
+
+The program "gaussianJetStudy" is a simplified version of
+"gaussianDijetStudy" which generates only one Gaussian jet and, if
+requested, pileup. It utilizes one additional module, "JetHistoryPrinter",
+which prints the history of cluster recombinations starting with the
+clustered jets and going up the parent tree, each time choosing the
+parent with higher transverse momentum. This program can be used to
+study how the values of the distance function increase in the clustering
+process, etc. The example script "run_gaussianJetStudy.csh" shows how
+to run this program (the program also prints its usage instructions if
+run without any arguments).
+
+Igor Volobouev
+August 08 2025
