@@ -6,5 +6,5 @@ includedir=@includedir@
 Name: sjet
 Description: Stable Jet
 Version: @VERSION@
-Libs: -L${libdir} -lase
+Libs: -L${libdir} -lsjet
 Cflags: -I${includedir}
