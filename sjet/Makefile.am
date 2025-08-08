@@ -8,4 +8,4 @@ AM_CPPFLAGS = -I@top_srcdir@/
 
 includedir = ${prefix}/include/sjet
 
-include_HEADERS = diffusionFactor2.h Cluster.hh ClusteringSequence.hh DiffusionDistFastJet.hh DistanceCalculator.hh AbsNodeVisitor.hh
+include_HEADERS = diffusionFactor2.h Cluster.hh ClusteringSequence.hh DiffusionDistFastJet.hh DistanceCalculator.hh AbsNodeVisitor.hh NodeVisitors.hh
