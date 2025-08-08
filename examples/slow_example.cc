@@ -5,9 +5,11 @@
 #include <stdexcept>
 #include <cstdlib>
 #include <cmath>
-#include "CmdLine.hh"
+
 #include "sjet/DistanceCalculator.hh"
-#include "ClusteringSequence.hh"
+#include "sjet/ClusteringSequence.hh"
+
+#include "CmdLine.hh"
 
 using namespace std;
 using namespace sjet;
