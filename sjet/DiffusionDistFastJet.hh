@@ -1,5 +1,5 @@
-#ifndef SJET_DIFFUSIONDISTFASTJET_hh
-#define SJET_DIFFUSIONDISTFASTJET_hh
+#ifndef SJET_DIFFUSIONDISTFASTJET_HH_
+#define SJET_DIFFUSIONDISTFASTJET_HH_
 
 //////////////////////////////////////////
 /// Wrapper to interface the diffusion distance
@@ -10,8 +10,9 @@
 #include <sstream>
 #include <cfloat>
 #include <iostream>
+#include <cmath>
 
-#include "diffusionFactor2.h"
+#include "sjet/diffusionFactor2.h"
 
 #include "fastjet/NNH.hh"
 #include "fastjet/JetDefinition.hh"
@@ -57,19 +58,18 @@ private:
 };
 
 
-class DiffusionDistFastJet: public JetDefinition::Plugin {
+class DiffusionDistFastJet : public fastjet::JetDefinition::Plugin {
 
 public:
-  inline DiffusionDistFastJet(const double R): JetDefinition::Plugin()
-    ,m_R(R)
-    { }
+  inline DiffusionDistFastJet(const double R)
+      : fastjet::JetDefinition::Plugin(), m_R(R) { }
 
   inline virtual ~DiffusionDistFastJet() { }
 
   // returns a textual description of the jet algorithm
   inline virtual std::string description() const {
 
-    std::stringstream desc;
+    std::ostringstream desc;
     desc << "Diffusion Distance (Fast Jet Plugin) Description:\n";
     desc << "The diffusion distance is defined as the minimum width Gaussian filter\n";
     desc << "for which only one energy deposit is observed from the original two.\n";
@@ -82,7 +82,7 @@ public:
   inline virtual double R() const { return m_R; }
 
   // run the clustering
-  virtual void run_clustering(ClusterSequence &) const;
+  virtual void run_clustering(fastjet::ClusterSequence &) const;
 
 
 private:
@@ -101,7 +101,7 @@ private:
 };
 
 
-void DiffusionDistFastJet::run_clustering(ClusterSequence &seq) const
+void DiffusionDistFastJet::run_clustering(fastjet::ClusterSequence &seq) const
 {
   // This function should fill the rest of the ClusterSequence using it member function
   // plugin_do_ij_recombination()
@@ -114,7 +114,7 @@ void DiffusionDistFastJet::run_clustering(ClusterSequence &seq) const
   fastjet::NNH<DiffBriefJet> nnh(seq.jets());
 
   // the ClusterSequence has already been filled with the initial event
-  const std::vector<PseudoJet> & initialEvent = seq.jets();
+  const std::vector<fastjet::PseudoJet> & initialEvent = seq.jets();
 
   double dij=-1;
   while ( njets > 1 ) {
@@ -145,11 +145,8 @@ void DiffusionDistFastJet::run_clustering(ClusterSequence &seq) const
 
   }
 
-
 };
-
 
 } // end sjet namespace
 
-
-#endif
+#endif // SJET_DIFFUSIONDISTFASTJET_HH_
