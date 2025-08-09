@@ -5,8 +5,8 @@
 #include <stdexcept>
 
 #include "sjet/ClusteringSequence.hh"
+#include "sjet/DistanceCalculator.hh"
 
-#include "DiffusionDistCalc.hh"
 #include "DijetComponents.hh"
 
 // When you add new items to the event, don't forget to add the
@@ -16,10 +16,10 @@ template <class Particle>
 struct DijetEvent
 {
     typedef Particle particle_type;
-    typedef sjet::ClusteringSequence<DiffusionDistCalc, Particle> clust_seq_type;
+    typedef sjet::ClusteringSequence<sjet::DistanceCalculator, Particle> clust_seq_type;
 
     inline DijetEvent()
-        : diffusionSequence((DiffusionDistCalc())) {clear();}
+        : diffusionSequence((sjet::DistanceCalculator())) {clear();}
 
     // Expected direction of the probe jet
     double expectedProbeEta;

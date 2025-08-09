@@ -5,12 +5,12 @@
 #include "rk/rk.hh"
 
 #include "sjet/ClusteringSequence.hh"
+#include "sjet/DistanceCalculator.hh"
 #include "sjet/NodeVisitors.hh"
 
-#include "DiffusionDistCalc.hh"
 #include "CmdLine.hh"
 
-typedef sjet::ClusteringSequence<DiffusionDistCalc, rk::P4> MyClustSeq;
+typedef sjet::ClusteringSequence<sjet::DistanceCalculator, rk::P4> MyClustSeq;
 
 static void print_usage(const char* progname)
 {
@@ -38,14 +38,14 @@ static void run_test(const unsigned nTries,
         for (unsigned i=0; i<nParticles; ++i)
             particles.push_back(random_particle());
 
-        MyClustSeq seq((DiffusionDistCalc()));
+        MyClustSeq seq((sjet::DistanceCalculator()));
         seq.init(particles);
         if (maxDist <= 0.0)
             seq.run();
         else
             seq.run(maxDist);
 
-        MyClustSeq seq2((DiffusionDistCalc()));
+        MyClustSeq seq2((sjet::DistanceCalculator()));
         seq2.init(particles);
         if (maxDist <= 0.0)
         {
