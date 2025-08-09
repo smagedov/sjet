@@ -5,10 +5,15 @@
 #include <stdexcept>
 #include <cstdlib>
 #include <cmath>
-#include "CmdLine.hh"
+
+#include "rk/rk.hh"
+
 #include "sjet/DistanceCalculator.hh"
 #include "sjet/ClusteringSequence.hh"
+
 #include "Pythia8/Pythia.h"
+
+#include "CmdLine.hh"
 
 //======================================================================
 // Hard-coded settings

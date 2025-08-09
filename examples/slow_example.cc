@@ -6,6 +6,8 @@
 #include <cstdlib>
 #include <cmath>
 
+#include "rk/rk.hh"
+
 #include "sjet/DistanceCalculator.hh"
 #include "sjet/ClusteringSequence.hh"
 
