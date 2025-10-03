@@ -22,6 +22,7 @@
 #include "RandJaccardMMDCalculator.hh"
 #include "CalcAndPrint.hh"
 #include "ClusteringVisualisation.hh"
+#include "FullJetHistoryPrinter.hh"
 
 // Utilities, etc
 #include "stringUtils.hh"
@@ -119,7 +120,10 @@ static void print_usage(const char* progname)
               << std::endl
               << " outputFile        The name of the file into which event information will be\n"
               << "                   written in a text form.\n"
-              << std::endl;
+              << std::endl
+              << " histFile          The name of the file into which the clustering history\n"
+	      << "                   will be written in a text form.\n"
+	      << std::endl;
 }
 
 int main(int argc, char *argv[])
@@ -175,7 +179,7 @@ int main(int argc, char *argv[])
     double distanceCutoff;
 
     // File names for dumping information
-    std::string dumpFile, outputFile;
+    std::string dumpFile, outputFile, histFile;
 
     // Randomize eta and phi of the probe jet?
     bool randomizeProbeJet;
@@ -201,7 +205,7 @@ int main(int argc, char *argv[])
 
         // Process positional arguments
         cmdline.optend();
-        if (cmdline.argc() != 11)
+        if (cmdline.argc() != 12)
             throw CmdLineError("wrong number of command line arguments");
         cmdline >> pt0 >> mult0 >> pt1 >> mult1 >> pt2 >> mult2 >> probeJetWidth
                 >> deltaR >> nEvents >> distanceCutoff >> outputFile;
@@ -288,7 +292,9 @@ int main(int argc, char *argv[])
     if (!dumpFile.empty())
         mySequence.add(GenParticleDump<MyEvent>(
                            "GenParticleDump", dumpFile));
-    mySequence.add(ClusteringVisualisation<MyEvent>("ClusteringVisualisation", outputFile));
+    mySequence.add(ClusteringVisualisation<MyEvent>(
+			    "ClusteringVisualisation", outputFile));
+    mySequence.add(FullJetHistoryPrinter<MyEvent>("0","dijetHistFile",100));
     // mySequence.add(frw::EventCounter<MyEvent>("Last_counter"));
 
     // Print module labels in this analysis sequence
