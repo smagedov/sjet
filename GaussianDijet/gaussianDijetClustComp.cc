@@ -294,7 +294,7 @@ int main(int argc, char *argv[])
                            "GenParticleDump", dumpFile));
     mySequence.add(ClusteringVisualisation<MyEvent>(
 			    "ClusteringVisualisation", outputFile));
-    mySequence.add(FullJetHistoryPrinter<MyEvent>("0","dijetHistFile",100));
+    mySequence.add(FullJetHistoryPrinter<MyEvent>("0", "dijetHistFile", 1000, distanceCutoff));
     // mySequence.add(frw::EventCounter<MyEvent>("Last_counter"));
 
     // Print module labels in this analysis sequence

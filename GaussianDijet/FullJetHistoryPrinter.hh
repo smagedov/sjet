@@ -30,18 +30,26 @@ public:
     {
         const std::vector<cluster_type>& history = evt_.diffusionSequence.clustHist();
         const cluster_type& clus = history.at(node);
-        const int clustparts = history.size();
-        const double dist = std::max(clus.dist(), 0.0);
+        //const int clustparts = history.size();
 
-        for (int i = 0; i < clustparts; i++) {
-            of_ << history[i].parent1() << ' ' << history[i].parent2() << ' ' << std::max(history[i].dist(), 0.0) << ' ';
-	    printPtEtaPhiM(history[i].p(), of_);
-	    of_ << std::endl;
-        }
-
-        of_ << -2 << ' ' << dist << ' ' << std::max(clus.maxDistanceSoFar(), 0.0) << ' ';
-        printPtEtaPhiM(p, of_);
+	of_ << node << ' ' << clus.parent1() << ' ' << clus.parent2() << ' ' << std::max(clus.dist(), 0.0) << ' ';
+	printPtEtaPhiM(p, of_);
 	of_ << std::endl;
+
+	if(clus.parent1()==-1 && clus.parent2()==-1) {
+		return;
+	} else {
+		const cluster_type& p1 = history.at(clus.parent1());
+                const cluster_type& p2 = history.at(clus.parent2());
+                visit(clus.parent1(), p1.p());
+                visit(clus.parent2(), p2.p());
+	}
+
+        //for (int i = 0; i < clustparts; i++) {
+        //    of_ << history[i].parent1() << ' ' << history[i].parent2() << ' ' << std::max(history[i].dist(), 0.0) << ' ';
+	//    printPtEtaPhiM(history[i].p(), of_);
+	//    of_ << std::endl;
+        //}
     }
 
 private:
@@ -62,10 +70,12 @@ public:
 
     inline FullJetHistoryPrinter(const std::string& i_label,
                              const std::string& outputPrefix,
-                             const unsigned maxJetsToPrint)
+                             const unsigned maxJetsToPrint,
+			     const double maxDistance)
         : Base(i_label),
           prefix_(outputPrefix),
           maxJetsToPrint_(maxJetsToPrint),
+	  maxDistance_(maxDistance),
           fileCount_(0)
     {
     }
@@ -96,7 +106,8 @@ public:
                 throw std::invalid_argument(os.str());
             }
             of.precision(12);
-            of << "parent1 parent2 dist pt eta phi m"
+	    of << maxDistance_ << std::endl;
+            of << "node parent1 parent2 dist pt eta phi m"
                << std::endl;
             const Particle& thisJet = evt.simpleDiffusionJets[ijet];
             const unsigned thisNode = evt.simpleDiffusionNodes[ijet];
@@ -121,6 +132,7 @@ private:
 
     std::string prefix_;
     unsigned maxJetsToPrint_;
+    double maxDistance_;
     unsigned fileCount_;
 };
 

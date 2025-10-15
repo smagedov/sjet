@@ -12,5 +12,6 @@ set seed = 115371470657
 set countPeriod = 10
 set dumpFile = "dijetEnergyFlow.txt"
 set outputFile = "dijetStudyExampleOutput.txt"
+set histFile = "dijetStudyClusteringHistory.txt"
 
-./gaussianDijetClustComp -r --countPeriod $countPeriod --seed $seed --dumpFile $dumpFile $avePtRef $muRef $avePtProbe $muProbe $avePtPileup $muPileup $probeJetWidth $deltaR $nEvents $distanceCutoff $outputFile
+./gaussianDijetClustComp -r --countPeriod $countPeriod --seed $seed --dumpFile $dumpFile $avePtRef $muRef $avePtProbe $muProbe $avePtPileup $muPileup $probeJetWidth $deltaR $nEvents $distanceCutoff $outputFile $histFile
