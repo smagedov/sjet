@@ -1,0 +1,20 @@
+! Main:numberOfEvents = 1        ! number of events to generate
+Random:seed = 42
+! 2) Settings related to the incoming beams
+Beams:idA = 2212                   ! first beam, p = 2212, pbar = -2212
+Beams:idB = 2212                   ! second beam, p = 2212, pbar = -2212
+Beams:eCM = 13600                   ! CM energy of collision
+
+! 3) Settings related
+Top:qqbar2ttbar = on
+Top:gg2ttbar = on
+6:m0 = 175.
+6:onMode = off
+6:onIfAny = 5
+-6:onMode = off
+-6:onIfAny = -5
+24:onMode = off
+24:onIfAny = 1 2 3 4 5
+-24:onMode = off
+-24:onIfAny = 1 2 3 4 5
+
