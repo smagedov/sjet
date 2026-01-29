@@ -34,7 +34,7 @@ public:
 
 	of_ << node << ' ' << clus.parent1() << ' ' << clus.parent2() << ' ' << std::max(clus.dist(), 0.0) << ' ';
 	printPtEtaPhiM(p, of_);
-	of_ << ' ' << clus.stab();
+	//of_ << ' ' << clus.stab();
 	of_ << std::endl;
 
 	if(clus.parent1()==-1 && clus.parent2()==-1) {
