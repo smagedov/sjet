@@ -208,11 +208,25 @@ public:
         finalParticles.reserve(evt.pythiaEvent->size());
 
         // Loop through particles in the event
+	for (long unsigned int i=0; i<evt.genClusters.size(); ++i) {
+                if (!evt.genClusters[i].empty()) {
+			int jetParts = evt.genClusters[i].size();
+                        for (int j=0; j<jetParts; ++j) {
+				int pid = evt.genClusters[i][j];
+				const Pythia8::Particle& p = (*evt.pythiaEvent)[pid];
+				if (p.isFinal()) {
+					evt.genEvent.first.push_back(rk::P4(p.pT()*geom3::Vector3(cos(p.phi()), sin(p.phi()), sinh(p.eta())), p.m()));
+					evt.genEvent.second.push_back(jetParts);
+				}
+                        }
+		}
+	}
+
         for (int i = 0; i < evt.pythiaEvent->size(); ++i) {
                 const Pythia8::Particle& p = (*evt.pythiaEvent)[i];
                 if (p.isFinal()) {
-			evt.genEvent.first.push_back(rk::P4(p.pT()*geom3::Vector3(cos(p.phi()), sin(p.phi()), sinh(p.eta())), p.m()));
-			evt.genEvent.second.push_back(1);
+//			evt.genEvent.first.push_back(rk::P4(p.pT()*geom3::Vector3(cos(p.phi()), sin(p.phi()), sinh(p.eta())), p.m()));
+//			evt.genEvent.second.push_back(1);
                         evt.genJets.push_back(rk::P4(p.pT()*geom3::Vector3(cos(p.phi()), sin(p.phi()), sinh(p.eta())), p.m()));
                 }
         }
