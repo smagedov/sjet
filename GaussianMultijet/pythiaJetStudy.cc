@@ -21,7 +21,7 @@
 #include "PythiaOutputPrinter.hh"
 #include "PythiaJetMaker.hh"
 #include "RandJaccardMMDCalculator.hh"
-#include "ClusteringVisualisation.hh"
+#include "PythiaClustering.hh"
 #include "FullJetHistoryPrinter.hh"
 
 // Utilities, etc
@@ -246,8 +246,8 @@ int main(int argc, char *argv[])
         mySequence.add(GenParticleDump<MyEvent>(
                            "GenParticleDump", dumpFile));
     mySequence.add(FullJetHistoryPrinter<MyEvent>("0", "pythiatHistFile", 1000, distanceCutoff));
-    mySequence.add(ClusteringVisualisation<MyEvent>(
-                       "ClusteringVisualisation", outputFile));
+    mySequence.add(PythiaClustering<MyEvent>(
+                       "PythiaClustering", outputFile));
     //mySequence.add(frw::EventCounter<MyEvent>("Last_counter"));
 
     // Print module labels in this analysis sequence
