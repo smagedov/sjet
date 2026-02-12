@@ -1,4 +1,7 @@
 #include <cassert>
+#include <vector>
+#include <numeric>
+#include <algorithm>
 
 #include "permutation.hh"
 
@@ -98,4 +101,35 @@ void orderedPermutation(unsigned long permutationNumber,
                     break;
                 }
     }
+}
+
+std::vector<std::vector<int>> generatePermutations(unsigned long n, unsigned long m) {
+	std::vector<std::vector<int>> permutations;
+
+    // indices [0, 1, ..., n-1]
+    std::vector<int> indices(n);
+    std::iota(indices.begin(), indices.end(), 0);
+
+    // selection mask: m true, n-m false
+    std::vector<bool> select(n, false);
+    std::fill(select.begin(), select.begin() + m, true);
+
+    do {
+        // choose m indices
+        std::vector<int> chosen;
+        for (unsigned long i = 0; i < n; ++i) {
+            if (select[i]) {
+                chosen.push_back(indices[i]);
+            }
+        }
+
+        // generate all permutations of the chosen indices
+        std::sort(chosen.begin(), chosen.end());
+        do {
+            permutations.push_back(chosen);
+        } while (std::next_permutation(chosen.begin(), chosen.end()));
+
+    } while (std::prev_permutation(select.begin(), select.end()));
+
+    return permutations;
 }

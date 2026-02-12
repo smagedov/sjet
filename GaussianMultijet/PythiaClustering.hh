@@ -2,11 +2,13 @@
 #define PYTHIACLUSTERING_HH_
 
 #include <cassert>
+#include <cfloat>
 #include <set>
 
 #include "AbsTextDump.hh"
 #include "printPtEtaPhi.hh"
 #include "ParticleDistances.hh"
+#include "permutation.hh"
 
 template <class Event>
 class PythiaClustering : public frw::AbsTextDump<Event>
@@ -38,7 +40,7 @@ public:
 
         std::vector<unsigned> jetClusAssign =
         evt.diffusionSequence.clusterAssignments(evt.simpleDiffusionJetsDistCutoff);
-
+	
 	// Find which node in the clustering tree corresponds
 	// closest to the reference jet
 	std::vector<unsigned> jetComponents;
@@ -50,63 +52,47 @@ public:
 		}
 	}
 
-	std::vector<unsigned> clusComponents;
-	double totDist = 0;
-	const unsigned nDiffusionJets = evt.simpleDiffusionJets.size();
-        const ParticleDeltaR dRcalculator;
+	const long unsigned nDiffusionJets = evt.simpleDiffusionJets.size();
+        const long unsigned nGenJets = evt.genJets.size();
 
-	for (unsigned i=0; i<jetComponents.size(); ++i) {
-		const Particle& refJet = evt.genJets.at(jetComponents[i]);
-		unsigned closesti=0;
-		double minDist=dRcalculator(refJet, evt.simpleDiffusionJets[closesti]);
-		for (unsigned j=1; j<nDiffusionJets; j++)
+	std::cout << "GenJets: " << nGenJets << " ClusteredJets: " << nDiffusionJets << std::endl;
+
+        auto perms = generatePermutations(nDiffusionJets, nGenJets);
+
+	std::cout << "Total Permutations: " << perms.size() << std::endl;
+
+	const ParticleDeltaR dRcalculator;
+	double minDist = DBL_MAX;
+	std::vector<int> bestAssign(nGenJets);
+	for (unsigned i=0; i<perms.size(); ++i) {
+		double totDist = 0;
+		for (unsigned j=0; j<perms[i].size(); ++j) {
+			const Particle& genJet = evt.genJets.at(j);
+			const Particle& difJet = evt.simpleDiffusionJets.at(perms[i][j]);
+			double tmp=dRcalculator(genJet, difJet);
+			totDist = totDist + tmp;
+		}
+		if (totDist < minDist)
 		{
-			const double tmp = dRcalculator(refJet, evt.simpleDiffusionJets[j]);
-			if (tmp < minDist)
-			{
-				closesti = j;
-				minDist = tmp;
-			}
-		}
-		clusComponents.push_back(closesti);
-		totDist = totDist + minDist;
-	}
-
-	std::vector<unsigned> closestNode;
-	for (unsigned i=0; i<clusComponents.size(); ++i) {
-		closestNode.push_back(evt.simpleDiffusionNodes[clusComponents[i]]);
-	}
-
-	// Only use the diffusion clustering assignments to the
-        // two leading pt jets. Assume everything else is pileup
-        // or unclustered.
-	const unsigned nParticles = jetClusAssign.size();
-
-        if (nDiffusionJets > jetComponents.size())
-	{
-            const unsigned unusedNode = evt.diffusionSequence.clustHist().size();
-
-            for (unsigned i=0; i<nParticles; ++i)
-            {
-                const unsigned a = jetClusAssign[i];
-                if (std::find(jetComponents.begin(), jetComponents.end(), a) == jetComponents.end())
-                    jetClusAssign[i] = unusedNode;
-            }
-        }
-
-	std::vector<unsigned> clustNumberAssign(nParticles);
-
-	for (unsigned i=0; i<nParticles; ++i)
-	{
-		for (unsigned j=0; j<closestNode.size(); ++j) {
-			std::cout << "Pong" << std::endl;
-			if (jetClusAssign[i] == closestNode[j]) {
-				std::cout << "Ping" << std::endl;
-				clustNumberAssign[i] = jetComponents[j];
-			}
+			bestAssign = perms[i];
+			minDist = totDist;
 		}
 	}
 
+	for (unsigned i=0; i<bestAssign.size(); ++i) {
+		std::cout << bestAssign[i] << " ";
+	}
+	std::cout << std::endl;
+
+        const unsigned nParticles = jetClusAssign.size();
+
+	std::cout << "Simple Diffusion Nodes Size: " << evt.simpleDiffusionNodes.size() << " nParticles: " << nParticles  << std::endl;
+
+        std::vector<unsigned> clustNumberAssign;
+	//std::vector<unsigned> genClusAssign;
+	for (unsigned i=0; i<nParticles; ++i) {
+		clustNumberAssign.push_back(bestAssign[genClusAssign[i]]);
+	}
 
         if (firstDump_)
         {

@@ -17,4 +17,6 @@ void orderedPermutation(unsigned long permutationNumber,
 unsigned long permutationNumber(const unsigned *permutation,
                                 unsigned permLen);
 
+std::vector<std::vector<int>> generatePermutations(unsigned long n, unsigned long m);
+
 #endif // PERMUTATION_HH_
