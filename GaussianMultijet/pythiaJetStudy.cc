@@ -23,6 +23,7 @@
 #include "RandJaccardMMDCalculator.hh"
 #include "PythiaClustering.hh"
 #include "FullJetHistoryPrinter.hh"
+#include "JetHistoryCopy.hh"
 
 // Utilities, etc
 #include "stringUtils.hh"
@@ -248,6 +249,7 @@ int main(int argc, char *argv[])
     mySequence.add(FullJetHistoryPrinter<MyEvent>("0", "pythiatHistFile", 1000, distanceCutoff));
     mySequence.add(PythiaClustering<MyEvent>(
                        "PythiaClustering", outputFile));
+    mySequence.add(JetHistoryCopy<MyEvent>("PythiaCopy"));
     //mySequence.add(frw::EventCounter<MyEvent>("Last_counter"));
 
     // Print module labels in this analysis sequence
