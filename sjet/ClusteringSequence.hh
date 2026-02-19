@@ -11,6 +11,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <algorithm>
+#include <cassert>
 
 #include "sjet/Cluster.hh"
 #include "sjet/AbsNodeVisitor.hh"
@@ -25,6 +26,23 @@ namespace sjet {
 
         ClusteringSequence(const DistCalc& calc)
             : distCalc_(calc) {reset();}
+
+        // Modifying copy constructor
+        template<class DistCalc2, class Particle2, class ParticleBulder>
+        ClusteringSequence(const ClusteringSequence<DistCalc2, Particle2>& prototype,
+                           const DistCalc& calc, const std::vector<Particle>& newInfo)
+            : distCalc_(calc),
+              distSet_(prototype.distSet_),
+              maxClusDist_(prototype.maxClusDist_),
+              nParticles_(prototype.nParticles_),
+              nClusters_(prototype.nClusters_)
+        {
+            const unsigned long sz = prototype.clustHist_.size();
+            assert(newInfo.size() == sz);
+            clustHist_.reserve(sz);
+            for (unsigned long i=0; i<sz; ++i)
+                clustHist_.push_back(cluster_type(prototype.clustHist_[i], newInfo[i]));
+        }
 
         inline int nParticles() const {return nParticles_;}
         inline int nClusters() const {return nClusters_;}

@@ -2,6 +2,7 @@
 #define SJET_CLUSTER_HH_
 
 #include <cassert>
+#include "objectPt.hh"
 
 namespace sjet {
     template <class Particle>
@@ -9,10 +10,17 @@ namespace sjet {
     public:
         typedef Particle particle_class;
 
-        inline explicit Cluster(const Particle& originpart) 
+        inline explicit Cluster(const Particle& originpart)
             : p_(originpart), dist_(-1.0), maxd_(-1.0),
-              scalarPtSum_(originpart.pt()),
+              scalarPtSum_(objectPt(originpart)),
               parent1_(-1), parent2_(-1), daughter_(0) {}
+
+        // Copy-like constructor from another cluster type
+        template<class OldParticle>
+        inline explicit Cluster(const Cluster<OldParticle>& c, const Particle& newpart)
+            : p_(newpart), dist_(c.dist_), maxd_(c.maxd_),
+              scalarPtSum_(c.scalarPtSum_),
+              parent1_(c.parent1_), parent2_(c.parent2_), daughter_(c.daughter_) {}
 
         inline Cluster(const Cluster& c1, const int index1, 
                        const Cluster& c2, const int index2,

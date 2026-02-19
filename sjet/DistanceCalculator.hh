@@ -25,6 +25,14 @@ namespace sjet {
             return dR*diffusionFactor2(std::min(pt1, pt2)/std::max(pt1, pt2));
         }
     };
+
+    struct DummyCalculator {
+        template<class Particle>
+        inline double operator()(const Particle&, const Particle&) const
+        {
+            return 0.0;
+        }
+    };
 }
 
 #endif // SJET_DISTANCECALCULATOR_HH_

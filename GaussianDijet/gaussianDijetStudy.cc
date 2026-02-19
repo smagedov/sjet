@@ -19,6 +19,7 @@
 #include "GenParticleDump.hh"
 #include "GenJetsMaker.hh"
 #include "SimpleJetMaker.hh"
+#include "ClusteringTreeExtender.hh"
 #include "RandJaccardMMDCalculator.hh"
 #include "CalcAndPrint.hh"
 

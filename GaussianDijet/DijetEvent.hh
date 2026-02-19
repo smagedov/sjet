@@ -3,11 +3,13 @@
 
 #include <limits>
 #include <stdexcept>
+#include <vector>
 
 #include "sjet/ClusteringSequence.hh"
 #include "sjet/DistanceCalculator.hh"
 
 #include "DijetComponents.hh"
+#include "particleSpecializations.hh"
 
 // When you add new items to the event, don't forget to add the
 // corresponding "Ready" flag and set it to "false" inside the
@@ -17,9 +19,10 @@ struct DijetEvent
 {
     typedef Particle particle_type;
     typedef sjet::ClusteringSequence<sjet::DistanceCalculator, Particle> clust_seq_type;
+    typedef sjet::ClusteringSequence<sjet::DummyCalculator, std::vector<Particle> > extended_seq_type;
 
     inline DijetEvent()
-        : diffusionSequence((sjet::DistanceCalculator())) {clear();}
+        : diffusionSequence((sjet::DistanceCalculator())), copySequence((sjet::DummyCalculator())) {clear();}
 
     // Expected direction of the probe jet
     double expectedProbeEta;
@@ -36,6 +39,10 @@ struct DijetEvent
     // Clustering sequence for the diffusion distance
     clust_seq_type diffusionSequence;
     bool diffusionSequenceReady;
+
+    // Clustering sequence copy with additional info
+    extended_seq_type copySequence;
+    bool copySequenceReady;
 
     // 4-momenta of the jets obtained with the diffusion distance
     // clustering and defined by a simple constant distance cutoff.
@@ -62,6 +69,7 @@ struct DijetEvent
         genEventReady = false;
         genJetsReady = false;
         diffusionSequenceReady = false;
+        copySequenceReady = false;
         simpleDiffusionJetsReady = false;
         simpleDiffusionClusDistReady = false;
     }
