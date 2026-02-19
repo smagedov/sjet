@@ -3,13 +3,15 @@ LOCALLIBS = /uscms/home/wejiejin/work/rk_install/lib
 PYTHIALIB = /uscms/home/wejiejin/work/pythia8315/lib
 PYTHIAINC = /uscms/home/wejiejin/work/pythia8315/include
 FASTJETLIB = /uscms/home/wejiejin/work/pythia8315/lib
-OFILES = stringUtils.o genClusterAssignments.o permutation.o mathUtils.o
+
+OFILES = stringUtils.o genClusterAssignments.o permutation.o mathUtils.o \
+         ChooseSequencer.o
 
 PROGRAMS = testClusteringSequence.cc testMultiParticleCollection.cc \
-           testEventProcessingFramework.cc gaussianDijetStudy.cc \
-           gaussianJetStudy.cc pythiaTTbarStudy.cc
+           testEventProcessingFramework.cc testChooseSequencer.cc \
+           gaussianDijetStudy.cc gaussianJetStudy.cc pythiaTTbarStudy.cc
 
-OPTIMIZE = -O2
+OPTIMIZE = -O3
 # OPTIMIZE = -O0 -ggdb
 
 
