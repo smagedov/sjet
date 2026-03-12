@@ -5,6 +5,7 @@
 #include <cassert>
 #include "rk/rk.hh"
 #include "Pythia8/Pythia.h"
+#include "ParticleMaker.hh"
 #include "AbsFrameworkModule.hh"
 using namespace Pythia8;
 std::vector<Particle> getPartonsFromTTbar(Event &event){
@@ -209,30 +210,34 @@ public:
 
         // Loop through particles in the event
 	for (long unsigned int i=0; i<evt.genClusters.size(); ++i) {
+		rk::P4 genJet;
                 if (!evt.genClusters[i].empty()) {
 			int jetParts = evt.genClusters[i].size();
                         for (int j=0; j<jetParts; ++j) {
 				int pid = evt.genClusters[i][j];
 				const Pythia8::Particle& p = (*evt.pythiaEvent)[pid];
 				if (p.isFinal()) {
-					evt.genEvent.first.push_back(rk::P4(p.pT()*geom3::Vector3(cos(p.phi()), sin(p.phi()), sinh(p.eta())), p.m()));
+					rk::P4 part = rk::P4(p.pT()*geom3::Vector3(cos(p.phi()), sin(p.phi()), sinh(p.eta())), p.m());
+					genJet = genJet + part;
+					evt.genEvent.first.push_back(part);
 					evt.genEvent.second.push_back(jetParts);
 				}
                         }
+			evt.genJets.push_back(genJet);
 		}
 	}
 
-        for (int i = 0; i < evt.pythiaEvent->size(); ++i) {
-                const Pythia8::Particle& p = (*evt.pythiaEvent)[i];
-                if (p.isFinal()) {
+//        for (int i = 0; i < evt.pythiaEvent->size(); ++i) {
+//                const Pythia8::Particle& p = (*evt.pythiaEvent)[i];
+//                if (p.isFinal()) {
 //			evt.genEvent.first.push_back(rk::P4(p.pT()*geom3::Vector3(cos(p.phi()), sin(p.phi()), sinh(p.eta())), p.m()));
 //			evt.genEvent.second.push_back(1);
-                        evt.genJets.push_back(rk::P4(p.pT()*geom3::Vector3(cos(p.phi()), sin(p.phi()), sinh(p.eta())), p.m()));
-                }
-        }
+//                        evt.genJets.push_back(rk::P4(p.pT()*geom3::Vector3(cos(p.phi()), sin(p.phi()), sinh(p.eta())), p.m()));
+//                }
+//        }
 
-	std::cout << "debug: genEvent size: " << evt.genEvent.first.size() << std::endl;
-	std::cout << "debug: genJets size: " << evt.genJets.size() << std::endl;
+//	std::cout << "debug: genEvent size: " << evt.genEvent.first.size() << std::endl;
+//	std::cout << "debug: genJets size: " << evt.genJets.size() << std::endl;
 
 	//evt.genJets.push_back(finalParticles);
 

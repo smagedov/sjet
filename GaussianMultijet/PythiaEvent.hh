@@ -30,9 +30,10 @@ struct PythiaEvent
 {
     typedef Particle particle_type;
     typedef sjet::ClusteringSequence<sjet::DistanceCalculator, Particle> clust_seq_type;
-    
+    typedef sjet::ClusteringSequence<sjet::DummyCalculator, std::vector<Particle> > extended_seq_type;
+
     inline PythiaEvent()
-        : diffusionSequence((sjet::DistanceCalculator())) {clear();}
+        : diffusionSequence((sjet::DistanceCalculator())), copySequence((sjet::DummyCalculator())) {clear();}
 
 
     // Data contained in this event (just an example)
@@ -55,6 +56,10 @@ struct PythiaEvent
     // Clustering sequence for the diffusion distance
     clust_seq_type diffusionSequence;
     bool diffusionSequenceReady;
+
+    // Clustering sequence copy with additional info
+    extended_seq_type copySequence;
+    bool copySequenceReady;
 
     // 4-momenta of the jets obtained with the diffusion distance
     // clustering and defined by a simple constant distance cutoff.

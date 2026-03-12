@@ -1,5 +1,5 @@
 #ifndef PYTHIAOUTPUTPRINTER_HH_
-#define PYTHIAOUTPUTPRINTER_HH
+#define PYTHIAOUTPUTPRINTER_HH_
 
 #include <cassert>
 #include <set>
@@ -48,6 +48,11 @@ public:
 			Jets = Jets + 1;
 			int partCount = evt.genClusters[i].size();
 			*Base::of_ << "Jet #" << Jets << " Particle Count: " << partCount << std::endl;
+			for (int j=0; j<partCount; ++j) {
+				*Base::of_ << " " << evt.genClusters[i][j];
+			}
+
+			*Base::of_ << std::endl;
 		}
 	}
 	

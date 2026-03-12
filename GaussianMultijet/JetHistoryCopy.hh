@@ -1,6 +1,8 @@
 #ifndef JETHISTORYCOPY_HH_
 #define JETHISTORYCOPY_HH_
 
+#include "cnpy.h"
+
 template <class Event>
 class JetHistoryCopy : public frw::AbsFrameworkAnalyzer<Event>
 {
@@ -60,11 +62,35 @@ public:
 			}
 		}
 
+		std::vector<double> leadingPt;
 		for (unsigned i = 0; i<history.size(); ++i) {
-			std::cout << "i: " << i+1 << " particle: " << history[i].p() << " quality: " << std::endl;
-			for (unsigned j=0; j<nJets; ++j) {
-				std::cout << histcopy[i][j] << " ";
+			double leadPt = 0.0;
+			for (unsigned j = 0; j<nJets; ++j) {
+				double tmp = histcopy[i][j].pt();
+				if (tmp > leadPt) {
+					leadPt = tmp;
+				}
 			}
+			leadingPt.push_back(leadPt);
+		}
+
+		std::vector<double> dists;
+		std::vector<double> ratios;
+		for (unsigned i = 0; i<history.size(); ++i) {
+			ratios.push_back(history[i].scalarPtSum()/leadingPt[i]);
+			dists.push_back(history[i].dist());
+		}
+		cnpy::npy_save("npyarrays/ratios.npy", &ratios[0], {ratios.size()}, "w");
+		cnpy::npy_save("npyarrays/dists.npy", &dists[0], {dists.size()}, "w");
+
+		for (unsigned i = 0; i<history.size(); ++i) {
+			//auto& vec = evt.copySequence.clustHist()[i].p();
+			//vec.insert(vec.end(), histcopy[i].begin(), histcopy[i].end());
+			std::cout << "evtHist: " <<  evt.diffusionSequence.clustHist()[i].p() << " copyHist: ";
+			//std::cout << "i: " << i+1 << " particle: " << history[i].p() << " quality: " << std::endl;
+			//for (unsigned j=0; j<nJets; ++j) {
+			//	std::cout << evt.copySequence.clustHist()[i].p().size() << " ";
+			//}
 			std::cout << std::endl;
 		}
 
