@@ -76,11 +76,15 @@ public:
 
 		std::vector<double> dists;
 		std::vector<double> ratios;
+		std::vector<double> vecsumratios;
 		for (unsigned i = 0; i<history.size(); ++i) {
-			ratios.push_back(history[i].scalarPtSum()/leadingPt[i]);
+			double vecsum = std::sqrt(history[i].p().px()*history[i].p().px() + history[i].p().py()*history[i].p().py() + history[i].p().pz()*history[i].p().pz());
+			vecsumratios.push_back(leadingPt[i]/vecsum);
+			ratios.push_back(leadingPt[i]/history[i].scalarPtSum());
 			dists.push_back(history[i].dist());
 		}
 		cnpy::npy_save("npyarrays/ratios.npy", &ratios[0], {ratios.size()}, "w");
+		cnpy::npy_save("npyarrays/vecsumratios.npy", &vecsumratios[0], {vecsumratios.size()}, "w");
 		cnpy::npy_save("npyarrays/dists.npy", &dists[0], {dists.size()}, "w");
 
 		for (unsigned i = 0; i<history.size(); ++i) {
