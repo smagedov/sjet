@@ -37,7 +37,7 @@ public:
 		const unsigned nGenClus = evt.genClusters.size();
 		for (unsigned i=0; i<nGenClus; ++i) {
 			if (!evt.genClusters[i].empty()) {
-				curParts = curParts + nGenClus;
+				curParts = curParts + evt.genClusters[i].size();
 				nParts.push_back(curParts);
 			}
 		}
@@ -83,14 +83,18 @@ public:
 		std::vector<double> dists;
 		std::vector<double> ratios;
 		std::vector<double> vecsumratios;
-		for (unsigned i = 0; i<size; ++i) {
+		std::vector<double> mass;
+		for (unsigned i=nParts[nJets-1]; i<size; ++i) {
 			vecsumratios.push_back(leadingPt[i]/history[i].p().pt());
 			ratios.push_back(leadingPt[i]/history[i].scalarPtSum());
 			dists.push_back(history[i].dist());
+			mass.push_back(history[i].p().m());
 		}
 		cnpy::npy_save("npyarrays/ratios.npy", &ratios[0], {ratios.size()}, "w");
 		cnpy::npy_save("npyarrays/vecsumratios.npy", &vecsumratios[0], {vecsumratios.size()}, "w");
 		cnpy::npy_save("npyarrays/dists.npy", &dists[0], {dists.size()}, "w");
+		cnpy::npy_save("npyarrays/masses.npy", &mass[0], {mass.size()}, "w");
+
 
 		//for (unsigned i = 0; i<history.size(); ++i) {
 			//auto& vec = evt.copySequence.clustHist()[i].p();
@@ -107,7 +111,7 @@ public:
 		std::vector<double> deltar;
 		std::vector<double> clusdis;
 		double alpha = 0.1;
-		for (unsigned i=0; i<size; ++i) {
+		for (unsigned i=nParts[nJets-1]; i<size; ++i) {
 			unsigned closesti = 0;
 			double closestdist = dRcalculator(evt.genJets[0], history[i].p());
 			for (unsigned j=1; j<nJets; ++j) {

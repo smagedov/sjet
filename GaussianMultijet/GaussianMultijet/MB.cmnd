@@ -1,0 +1,11 @@
+! Main:numberOfEvents = 1        ! number of events to generate
+Random:setSeed = on
+Random:seed = 4
+! 2) Settings related to the incoming beams
+Beams:idA = 2212                   ! first beam, p = 2212, pbar = -2212
+Beams:idB = 2212                   ! second beam, p = 2212, pbar = -2212
+Beams:eCM = 13600                   ! CM energy of collision
+PartonLevel:MPI = on
+PartonLevel:Remnants = on
+! 3) Settings related
+SoftQCD:all = on

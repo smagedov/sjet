@@ -44,6 +44,7 @@ struct PythiaEvent
     bool pythiaEventReady;
     std::vector<int> promptPartons;
     std::vector<std::vector<int>> genClusters;
+    std::vector<std::vector<int>> genClustersFromHardCollision;
 
     // Generated event contents
     std::pair<std::vector<Particle>, std::vector<unsigned> > genEvent;
@@ -100,7 +101,7 @@ struct PythiaEvent
         pythiaEventReady = false;
         genJetsReady = false;
         genEventReady = false;
-        diffusionSequenceReady = false;
+	diffusionSequenceReady = false;
         simpleDiffusionJetsReady = false;
         simpleDiffusionClusDistReady = false;
 

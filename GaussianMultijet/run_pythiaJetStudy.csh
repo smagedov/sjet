@@ -1,4 +1,4 @@
-set nEvents = 3
+set nEvents = 10
 set nJets = 12
 set distanceCutoff = 0.9
 set maxDistance = 10.5
