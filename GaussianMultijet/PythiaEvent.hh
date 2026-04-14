@@ -79,6 +79,8 @@ struct PythiaEvent
     double simpleDiffusionMMDDist;
     bool simpleDiffusionClusDistReady;
 
+    int hardScatterSize;
+
     // Handle event numbers
     inline void setNumber(const unsigned long n)
     {
@@ -104,6 +106,10 @@ struct PythiaEvent
 	diffusionSequenceReady = false;
         simpleDiffusionJetsReady = false;
         simpleDiffusionClusDistReady = false;
+        hardScatterSize = 0;
+        genClusters.clear();
+        genClustersFromHardCollision.clear();
+        promptPartons.clear();
 
 
     }

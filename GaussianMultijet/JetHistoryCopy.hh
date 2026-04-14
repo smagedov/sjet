@@ -110,7 +110,7 @@ public:
 		const ParticleDeltaR dRcalculator;
 		std::vector<double> deltar;
 		std::vector<double> clusdis;
-		double alpha = 0.1;
+		double alpha = 0.5;
 		for (unsigned i=nParts[nJets-1]; i<size; ++i) {
 			unsigned closesti = 0;
 			double closestdist = dRcalculator(evt.genJets[0], history[i].p());
@@ -127,6 +127,28 @@ public:
 		}
 		cnpy::npy_save("npyarrays/deltar.npy", &deltar[0], {deltar.size()}, "w");
 		cnpy::npy_save("npyarrays/clusdis.npy", &clusdis[0], {clusdis.size()}, "w");
+
+		std::vector<unsigned> mask(size);
+		std::vector<unsigned> closestjeti;
+		for (unsigned i=0; i<nJets; ++i) {
+			unsigned closesti = 0;
+			double closestdist = dRcalculator(evt.genJets[i], history[nParts[nJets-1]].p()) + alpha*log(abs(evt.genJets[i].pt()/history[nParts[nJets-1]].p().pt()));
+			for (unsigned j=nParts[nJets]; j<size; ++j) {
+				if (mask[j] == 0) {
+					double tmp = dRcalculator(evt.genJets[i], history[j].p()) + + alpha*log(abs(evt.genJets[i].pt()/history[j].p().pt()));
+					if (tmp < closestdist) {
+						closestdist = tmp;
+						closesti = j;
+					}
+				}
+			}
+			closestjeti.push_back(closesti);
+			int parent1 = history[closesti].parent1();
+			int parent2 = history[closesti].parent2();
+			mask[parent1] = 1;
+			mask[parent2] = 1;
+			std::cout << "parent1 id: " << history[closesti].parent1() << " parent2 id: " << history[closesti].parent2() << std::endl;
+		}
 
 		return true;
 	}

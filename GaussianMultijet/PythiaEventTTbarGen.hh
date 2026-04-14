@@ -59,7 +59,7 @@ void getAncestorsRecursive(Event& event, int iParticle,std::vector<int>& product
     std::vector<int> mo;
     if(p.mother1() >0 ) mo.push_back(p.mother1());
     if(p.mother2() >0 ) mo.push_back(p.mother2());
-    for (int i = 0; i <= 1; ++i) {
+    for (int i = 0; i < (int)mo.size(); ++i) {
         int iMo = mo[i];
         if (iMo <= 0 || iMo >= event.size()) continue;
         const auto& m = event[iMo];
@@ -234,10 +234,12 @@ void printFinalPariclesFromTTBar(Event &event){
 }
 
 
-void getFinalParticleClusters(Event& event, vector<vector<int>>& jets){
+void getFinalParticleClusters(Event& event, vector<vector<int>>& jets, int hardScatterSize = -1){
+	if (hardScatterSize < 0) hardScatterSize = event.size();
 	std::vector<int> finals;
+	std::cout << "hardScatterSize: " << hardScatterSize << std::endl;
 	cout<<"Final particles from this event: "<<endl;
-        for (int i = 0; i < event.size(); ++i) {
+        for (int i = 0; i < hardScatterSize; ++i) {
                 auto &p = event[i];
                 if(p.isFinal()){
                         finals.push_back(i);
@@ -272,10 +274,11 @@ void getFinalParticleClusters(Event& event, vector<vector<int>>& jets){
 }
 
 
-void getFinalParticleClustersFromTTbar(Event& event, vector<vector<int>>& jets){
+void getFinalParticleClustersFromTTbar(Event& event, vector<vector<int>>& jets, int hardScatterSize = -1){
+	if (hardScatterSize < 0) hardScatterSize = event.size();
         std::vector<int> finals;
         cout<<"Final particles from this event: "<<endl;
-        for (int i = 0; i < event.size(); ++i) {
+        for (int i = 0; i < hardScatterSize; ++i) {
                 auto &p = event[i];
                 if(p.isFinal()){
                         finals.push_back(i);
@@ -471,8 +474,9 @@ public:
         // Make sure that the event has been initialized
         assert(evt.pythiaEventReady);
 	assert(!evt.genJetsReady);
-	getFinalParticleClusters(*evt.pythiaEvent,evt.genClusters);
-	getFinalParticleClustersFromTTbar(*evt.pythiaEvent,evt.genClustersFromHardCollision);
+	getFinalParticleClusters(*evt.pythiaEvent,evt.genClusters,evt.hardScatterSize);
+	std::cout << "Did we get here?" << std::endl;
+	getFinalParticleClustersFromTTbar(*evt.pythiaEvent,evt.genClustersFromHardCollision,evt.hardScatterSize);
         evt.genJetsReady = true;
 
 	std::cout << "Yo How Much: " << evt.genClusters.size() << std::endl;
