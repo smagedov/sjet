@@ -2,6 +2,7 @@
 #define JETHISTORYCOPY_HH_
 
 #include <cmath>
+#include <string>
 
 #include "cnpy.h"
 #include "ParticleDistances.hh"
@@ -45,14 +46,10 @@ public:
 		const std::vector<cluster_type>& history = evt.diffusionSequence.clustHist();
 		const unsigned size = history.size();
 
-		//for (unsigned i=0; i<nJets; ++i) {
-		//	std::cout << "Jet #" << i+1 << " Total Particles: " << nParts[i] << std::endl;
-		//}
+		std::vector<std::vector<rk::P4>> histcopy(history.size(), std::vector<rk::P4>(nGenClus));
 
-		std::vector<std::vector<rk::P4>> histcopy(history.size(), std::vector<rk::P4>(nJets));
-
-		for (unsigned i=0; i<nParts[nJets]; ++i) {
-			for (unsigned j=0; j<nJets; ++j) {
+		for (unsigned i=0; i<nParts[nGenClus-1]; ++i) {
+			for (unsigned j=0; j<nGenClus; ++j) {
 				if (i < nParts[j]) {
 					histcopy[i][j] = history[i].p();
 					break;
@@ -60,10 +57,10 @@ public:
 			}
 		}
 
-		for (unsigned i=nParts[nJets-1]; i<size; ++i) {
+		for (unsigned i=nParts[nGenClus-1]+1; i<size; ++i) {
 			int pind1 = history[i].parent1();
 			int pind2 = history[i].parent2();
-			for (unsigned j=0; j<nJets; ++j) {
+			for (unsigned j=0; j<nGenClus; ++j) {
 				histcopy[i][j] = histcopy[pind1][j] + histcopy[pind2][j];
 			}
 		}
@@ -71,7 +68,7 @@ public:
 		std::vector<double> leadingPt;
 		for (unsigned i = 0; i<size; ++i) {
 			double leadPt = 0.0;
-			for (unsigned j = 0; j<nJets; ++j) {
+			for (unsigned j = 0; j<nGenClus; ++j) {
 				double tmp = histcopy[i][j].pt();
 				if (tmp > leadPt) {
 					leadPt = tmp;
@@ -84,16 +81,19 @@ public:
 		std::vector<double> ratios;
 		std::vector<double> vecsumratios;
 		std::vector<double> mass;
-		for (unsigned i=nParts[nJets-1]; i<size; ++i) {
+		for (unsigned i=nParts[nGenClus-1]; i<size; ++i) {
 			vecsumratios.push_back(leadingPt[i]/history[i].p().pt());
 			ratios.push_back(leadingPt[i]/history[i].scalarPtSum());
 			dists.push_back(history[i].dist());
 			mass.push_back(history[i].p().m());
 		}
-		cnpy::npy_save("npyarrays/ratios.npy", &ratios[0], {ratios.size()}, "w");
-		cnpy::npy_save("npyarrays/vecsumratios.npy", &vecsumratios[0], {vecsumratios.size()}, "w");
-		cnpy::npy_save("npyarrays/dists.npy", &dists[0], {dists.size()}, "w");
-		cnpy::npy_save("npyarrays/masses.npy", &mass[0], {mass.size()}, "w");
+
+		std::string evtnum = std::to_string(evt.number());
+
+		cnpy::npy_save("npyarrays/" + evtnum + "_ratios.npy", &ratios[0], {ratios.size()}, "w");
+		cnpy::npy_save("npyarrays/" + evtnum + "_vecsumratios.npy", &vecsumratios[0], {vecsumratios.size()}, "w");
+		cnpy::npy_save("npyarrays/" + evtnum + "_dists.npy", &dists[0], {dists.size()}, "w");
+		cnpy::npy_save("npyarrays/" + evtnum + "_masses.npy", &mass[0], {mass.size()}, "w");
 
 
 		//for (unsigned i = 0; i<history.size(); ++i) {
@@ -111,7 +111,7 @@ public:
 		std::vector<double> deltar;
 		std::vector<double> clusdis;
 		double alpha = 0.5;
-		for (unsigned i=nParts[nJets-1]; i<size; ++i) {
+		for (unsigned i=nParts[nGenClus-1]; i<size; ++i) {
 			unsigned closesti = 0;
 			double closestdist = dRcalculator(evt.genJets[0], history[i].p());
 			for (unsigned j=1; j<nJets; ++j) {
@@ -125,14 +125,14 @@ public:
 			deltar.push_back(closestdist);
 			clusdis.push_back(tmpclusdis);
 		}
-		cnpy::npy_save("npyarrays/deltar.npy", &deltar[0], {deltar.size()}, "w");
-		cnpy::npy_save("npyarrays/clusdis.npy", &clusdis[0], {clusdis.size()}, "w");
+		cnpy::npy_save("npyarrays/" + evtnum + "_deltar.npy", &deltar[0], {deltar.size()}, "w");
+		cnpy::npy_save("npyarrays/" + evtnum + "_clusdis.npy", &clusdis[0], {clusdis.size()}, "w");
 
 		std::vector<unsigned> mask(size);
 		std::vector<unsigned> closestjeti;
 		for (unsigned i=0; i<nJets; ++i) {
 			unsigned closesti = 0;
-			double closestdist = dRcalculator(evt.genJets[i], history[nParts[nJets-1]].p()) + alpha*log(abs(evt.genJets[i].pt()/history[nParts[nJets-1]].p().pt()));
+			double closestdist = dRcalculator(evt.genJets[i], history[nParts[nGenClus-1]].p()) + alpha*log(abs(evt.genJets[i].pt()/history[nParts[nGenClus-1]].p().pt()));
 			for (unsigned j=nParts[nJets]; j<size; ++j) {
 				if (mask[j] == 0) {
 					double tmp = dRcalculator(evt.genJets[i], history[j].p()) + + alpha*log(abs(evt.genJets[i].pt()/history[j].p().pt()));
@@ -149,6 +149,7 @@ public:
 			mask[parent2] = 1;
 			std::cout << "parent1 id: " << history[closesti].parent1() << " parent2 id: " << history[closesti].parent2() << std::endl;
 		}
+                std::cout << "HOLA" << std::endl;
 
 		return true;
 	}

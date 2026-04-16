@@ -230,8 +230,8 @@ int main(int argc, char *argv[])
     // undesired effects.
     MyAnalysis mySequence;
     {
-        const PythiaEventMaker<MyEvent> PythiaJetGenerator(
-            "PythiaEventMaker", inputFile);
+        const PythiaEventMaker<MyEvent, MyRng> PythiaJetGenerator(
+            "PythiaEventMaker", gen, inputFile);
         mySequence.add(PythiaJetGenerator);
     }
     mySequence.add(PythiaEventTTbarGen<MyEvent>(

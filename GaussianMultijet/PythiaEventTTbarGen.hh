@@ -235,9 +235,10 @@ void printFinalPariclesFromTTBar(Event &event){
 
 
 void getFinalParticleClusters(Event& event, vector<vector<int>>& jets, int hardScatterSize = -1){
+	std::cout << "hardScatterSize: " << hardScatterSize << std::endl;
 	if (hardScatterSize < 0) hardScatterSize = event.size();
 	std::vector<int> finals;
-	std::cout << "hardScatterSize: " << hardScatterSize << std::endl;
+	std::cout << "hardScatterSize: " << hardScatterSize << " event size: " << event.size() << std::endl;
 	cout<<"Final particles from this event: "<<endl;
         for (int i = 0; i < hardScatterSize; ++i) {
                 auto &p = event[i];
@@ -475,11 +476,11 @@ public:
         assert(evt.pythiaEventReady);
 	assert(!evt.genJetsReady);
 	getFinalParticleClusters(*evt.pythiaEvent,evt.genClusters,evt.hardScatterSize);
-	std::cout << "Did we get here?" << std::endl;
 	getFinalParticleClustersFromTTbar(*evt.pythiaEvent,evt.genClustersFromHardCollision,evt.hardScatterSize);
         evt.genJetsReady = true;
 
-	std::cout << "Yo How Much: " << evt.genClusters.size() << std::endl;
+	evt.genEvent.first.clear();
+        evt.genEvent.second.clear();
 
         std::vector<rk::P4> finalParticles;
         finalParticles.reserve(evt.pythiaEvent->size());
@@ -504,7 +505,6 @@ public:
 	}
 
         // Return allowing other modules to proceed
-	std::cout << "Yo" << std::endl;
         return true;
     }
 

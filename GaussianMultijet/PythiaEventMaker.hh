@@ -34,7 +34,7 @@ int poisson(double nAvg, Pythia8::Rndm& rndm) {
   return NMAX;
 }
 
-template <class Event>
+template <class Event, class Rng>
 class PythiaEventMaker : public frw::AbsFrameworkModule<Event>
 {
 public:
@@ -42,11 +42,12 @@ public:
     typedef frw::AbsFrameworkModule<Event> Base;
 
     inline PythiaEventMaker(const std::string& i_label,
+		             Rng& gen,
                              const std::string& pythiacard)
         //With Pileup
 	//: Base(i_label),pythiacard_(pythiacard),pythiaPUcard_("MB.cmnd"),firstcall_(true){}
 	//Without Pileup
-	: Base(i_label),pythiacard_(pythiacard),firstcall_(true){}
+	: Base(i_label),gen_(gen),pythiacard_(pythiacard),firstcall_(true){}
     void init(){
 	    pythia_ = std::shared_ptr<Pythia8::Pythia>(new Pythia8::Pythia());
 
@@ -70,6 +71,9 @@ public:
         // Make sure that the event has been initialized
         assert(evt.isNumberValid());
 
+        // Make sure that we are not overwriting existing data
+        assert(!evt.genEventReady);
+
 	//double nPileupAvg = 1;
         // Make sure that the event has been initialized
 	std::cout<<"next "<<pythia_->next()<<std::endl;
@@ -88,9 +92,13 @@ public:
         assert(!evt.genEventReady);
 
 	evt.pythiaEvent = &pythia_->event;
-	std::cout<<"next "<<pythia_->next()<<std::endl;;
 	std::cout<<"evt.pythiaEvent->size() "<<evt.pythiaEvent->size()<<std::endl;
+	std::cout<<"hardScatterSize: " << evt.hardScatterSize << std::endl;
         evt.pythiaEventReady = true;
+
+	const GenEvent& genEvent0 = eventBuilder_.make(gen_);
+
+        evt.genEventReady = true;
 
         // Return allowing other modules to proceed
         return true;
@@ -100,13 +108,17 @@ public:
 
 private:
     typedef typename Event::particle_type MyParticle;
+    typedef MultiParticleCollectionMaker<MyParticle,Rng> MyEventBuilder;
+    typedef std::pair<std::vector<MyParticle>, std::vector<unsigned> > GenEvent;
 
     //std::uniform_real_distribution<> uni_;
+    Rng& gen_;
     std::string pythiacard_;
     std::shared_ptr<Pythia8::Pythia> pythia_;
-    std::shared_ptr<Pythia8::Pythia> pythiaPU_;
-    std::string pythiaPUcard_;
+    //std::shared_ptr<Pythia8::Pythia> pythiaPU_;
+    //std::string pythiaPUcard_;
     bool firstcall_;
+    MyEventBuilder eventBuilder_;
 };
 
 #endif // PYTHIAEVENTMAKER_HH_
