@@ -25,6 +25,7 @@
 #include "FullJetHistoryPrinter.hh"
 #include "JetHistoryCopy.hh"
 #include "ClusteringTreeExtender.hh"
+#include "StabilityCalc.hh"
 
 // Utilities, etc
 #include "stringUtils.hh"
@@ -247,13 +248,11 @@ int main(int argc, char *argv[])
     if (!dumpFile.empty())
         mySequence.add(GenParticleDump<MyEvent>(
                            "GenParticleDump", dumpFile));
-    mySequence.add(FullJetHistoryPrinter<MyEvent>("0", "pythiatHistFile", 1000, distanceCutoff));
-    mySequence.add(PythiaClustering<MyEvent>(
-                       "PythiaClustering", outputFile));
-    //mySequence.add(ClusteringTreeExtender<MyEvent>(
-    //			    "ClusteringTreeExtender"));
-    mySequence.add(JetHistoryCopy<MyEvent>("PythiaCopy"));
-    //mySequence.add(frw::EventCounter<MyEvent>("Last_counter"));
+    //mySequence.add(FullJetHistoryPrinter<MyEvent>("0", "pythiatHistFile", 1000, distanceCutoff));
+    //mySequence.add(PythiaClustering<MyEvent>(
+    //                   "PythiaClustering", outputFile));
+    //mySequence.add(JetHistoryCopy<MyEvent>("PythiaCopy"));
+    mySequence.add(StabilityCalc<MyEvent>("StabilityCalc"));
 
     // Print module labels in this analysis sequence
     std::cout << "Sequence of framework modules ("
@@ -270,9 +269,11 @@ int main(int argc, char *argv[])
     // (i.e., process the event loop)
     for (unsigned iev=0; iev<nEvents; ++iev)
     {
+	std::cout << "DID WE DO IT?" << std::endl;
         evt.clear();
         evt.setNumber(iev);
         mySequence.run(evt);
+	std::cout << "YES WE DID" << std::endl;
     }
 
 

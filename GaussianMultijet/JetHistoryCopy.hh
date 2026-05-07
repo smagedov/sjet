@@ -110,7 +110,7 @@ public:
 		const ParticleDeltaR dRcalculator;
 		std::vector<double> deltar;
 		std::vector<double> clusdis;
-		double alpha = 0.5;
+		double alpha = 1.5;
 		for (unsigned i=nParts[nGenClus-1]; i<size; ++i) {
 			unsigned closesti = 0;
 			double closestdist = dRcalculator(evt.genJets[0], history[i].p());
@@ -143,12 +143,27 @@ public:
 				}
 			}
 			closestjeti.push_back(closesti);
+			mask[closesti] = 1;
 			int parent1 = history[closesti].parent1();
 			int parent2 = history[closesti].parent2();
-			mask[parent1] = 1;
-			mask[parent2] = 1;
+			if (parent1 != -1) {
+				mask[parent1] = 1;
+			}
+			if (parent2 != -1) {
+				mask[parent2] = 1;
+			}
 			std::cout << "parent1 id: " << history[closesti].parent1() << " parent2 id: " << history[closesti].parent2() << std::endl;
 		}
+
+		dists.clear();
+		ratios.clear();
+		vecsumratios.clear();
+		mass.clear();
+		deltar.clear();
+		clusdis.clear();
+		mask.clear();
+		closestjeti.clear();
+
                 std::cout << "HOLA" << std::endl;
 
 		return true;

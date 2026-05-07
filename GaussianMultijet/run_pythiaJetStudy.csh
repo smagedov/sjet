@@ -1,4 +1,4 @@
-set nEvents = 3
+set nEvents = 100
 set nJets = 12
 set distanceCutoff = 0.9
 set maxDistance = 10.5
@@ -8,4 +8,7 @@ set dumpFile = "pythiaEnergyFlow.txt"
 set outputFile = "pythiaStudyExampleOutput.txt"
 set inputFile = "TTbar.cmnd"
 
+#valgrind --leak-check=yes ./pythiaJetStudy --countPeriod $countPeriod --dumpFile $dumpFile $nEvents $nJets $distanceCutoff $outputFile $inputFile
 ./pythiaJetStudy --countPeriod $countPeriod --dumpFile $dumpFile $nEvents $nJets $distanceCutoff $outputFile $inputFile
+
+mv *.txt pythiaHistFile/

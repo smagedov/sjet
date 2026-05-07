@@ -479,9 +479,6 @@ public:
 	getFinalParticleClustersFromTTbar(*evt.pythiaEvent,evt.genClustersFromHardCollision,evt.hardScatterSize);
         evt.genJetsReady = true;
 
-	evt.genEvent.first.clear();
-        evt.genEvent.second.clear();
-
         std::vector<rk::P4> finalParticles;
         finalParticles.reserve(evt.pythiaEvent->size());
 

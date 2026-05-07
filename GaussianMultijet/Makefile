@@ -6,7 +6,7 @@ PROGRAMS = testClusteringSequence.cc testMultiParticleCollection.cc \
            testEventProcessingFramework.cc gaussianMultijetStudy.cc \
 	   gaussianMultijetClustComp.cc pythiaJetStudy.cc
 
-OPTIMIZE = -O3
+OPTIMIZE = -O1 -g
 # OPTIMIZE = -O0 -ggdb
 INCLUDES = -I. -I$(RK_LIBDIR)/../include
 # ROOTLIBS=`root-config --glibs`

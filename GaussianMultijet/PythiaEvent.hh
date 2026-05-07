@@ -102,6 +102,9 @@ struct PythiaEvent
         number_ = invalidEventNumber_;
         pythiaEventReady = false;
         genJetsReady = false;
+	genJets.clear();
+	genEvent.first.clear();
+	genEvent.second.clear();
         genEventReady = false;
 	diffusionSequenceReady = false;
         simpleDiffusionJetsReady = false;
