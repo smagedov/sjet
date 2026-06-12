@@ -94,6 +94,10 @@ namespace sjet {
             return true;
         }
 
+        const double getlogProbability(const int nodeid) {
+		return clustHist_(nodeid).logprob();
+	}
+
         inline double nextDistance() const {
             if (distSet_.empty())  {
                 return -1.0;
