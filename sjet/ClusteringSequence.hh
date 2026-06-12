@@ -94,9 +94,18 @@ namespace sjet {
             return true;
         }
 
-        const double getlogProbability(const int nodeid) {
-		return clustHist_(nodeid).logprob();
+        inline double getLogProbability(const int nodeid) const {
+            return clustHist_[nodeid].logprob();
 	}
+
+        inline double getProbability(const int nodeid) const {
+            return clustHist_[nodeid].prob();
+        }
+
+        void setProbability(const int nodeid, const double probability) {
+            clustHist_[nodeid].prob_ = probability;
+	    clustHist_[nodeid].logprob_ = std::log(probability);
+        }
 
         inline double nextDistance() const {
             if (distSet_.empty())  {

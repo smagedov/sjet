@@ -26,6 +26,7 @@
 #include "JetHistoryCopy.hh"
 #include "ClusteringTreeExtender.hh"
 #include "StabilityCalc.hh"
+#include "ProbabilityCalc.hh"
 
 // Utilities, etc
 #include "stringUtils.hh"
@@ -248,11 +249,12 @@ int main(int argc, char *argv[])
     if (!dumpFile.empty())
         mySequence.add(GenParticleDump<MyEvent>(
                            "GenParticleDump", dumpFile));
-    //mySequence.add(FullJetHistoryPrinter<MyEvent>("0", "pythiatHistFile", 1000, distanceCutoff));
-    //mySequence.add(PythiaClustering<MyEvent>(
-    //                   "PythiaClustering", outputFile));
-    //mySequence.add(JetHistoryCopy<MyEvent>("PythiaCopy"));
-    mySequence.add(StabilityCalc<MyEvent>("StabilityCalc"));
+    mySequence.add(FullJetHistoryPrinter<MyEvent>("0", "pythiatHistFile", 1000, distanceCutoff));
+    mySequence.add(PythiaClustering<MyEvent>(
+                       "PythiaClustering", outputFile));
+    mySequence.add(JetHistoryCopy<MyEvent>("PythiaCopy"));
+    mySequence.add(ProbabilityCalc<MyEvent>("ProbabilityCalc"));
+    //mySequence.add(StabilityCalc<MyEvent>("StabilityCalc"));
 
     // Print module labels in this analysis sequence
     std::cout << "Sequence of framework modules ("
