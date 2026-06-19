@@ -48,20 +48,18 @@ public:
                 const unsigned size = history.size();
 
 		std::vector<double> stabdists;
-		std::vector<double> stability(size);
-		for (unsigned i=0; i<nParts[nGenClus-1]; ++i) {
-			stability[i] = 0.0;
-		}
+		std::vector<double> stabup(size);
+		std::vector<double> stabdown(size);
 
                 for (unsigned i=0; i<size; ++i) {
                         stabdists.push_back(history[i].dist());
                 }
 
-                cnpy::npy_save("npyarrays/" + evtnum + "_stabdists.npy", &stabdists[0], {stabdists.size()}, "w");
+                cnpy::npy_save("npyarrays/stabdists/" + evtnum + "_stabdists.npy", &stabdists[0], {stabdists.size()}, "w");
 
 		//Stability going up:
 		//const ParticleDeltaR dRcalculator;
-		for (unsigned i=nParts[nGenClus-1]; i<size; ++i) {
+		for (unsigned i=nParts[nGenClus-1]; i<size-1; ++i) {
 			int parent1 = history[i].parent1();
 			int parent2 = history[i].parent2();
 			int parent = 0;
@@ -72,30 +70,45 @@ public:
 				parent = parent2;
 			}
 			if (history[parent].dist() != -1) {
-				double distratio = history[parent].dist()/history[i].dist();
-				//std::cout << i << " " << parent << " " << distratio << std::endl;
-				//double massratio = history[parent].p().m()/history[i].p().m();
-				double ptratio = history[parent].p().pt()/history[i].p().pt();
+				double parentdist = history[parent].dist();
+				double parentmass = history[parent].p().m();
+				double parentpt = history[parent].p().pt();
+				double partdist = history[i].dist();
+				double partmass = history[i].p().m();
+				double partpt = history[i].p().pt();
+				double inst = (partmass - parentmass)/parentmass + (partpt - parentpt)/parentpt;
 				//double deltar = dRcalculator(history[parent].p(), history[i].p());
-				stab = stability[parent] + ptratio*log(distratio);
+				stab = stabup[parent] + inst*log(parentdist/partdist);
 			}
-			stability[i] = stab;
+			stabup[i] = stab;
 		}
 
 		//Stability going down:
-		for (unsigned i=size-1; i>=nParts[nGenClus-1]; --i) {
+		for (unsigned i=size-2; i>=nParts[nGenClus-1]; --i) {
 			int daughter = history[i].daughter();
 			double stab = 0.0;
 			if (history[i].dist() != -1) {
-				double distratio = history[i].dist()/history[daughter].dist();
-				double ptratio = history[i].p().pt()/history[daughter].p().pt();
-				stab = stability[daughter] + ptratio*log(distratio);
+                                double daughtdist = history[daughter].dist();
+                                double daughtmass = history[daughter].p().m();
+                                double daughtpt = history[daughter].p().pt();
+                                double partdist = history[i].dist();
+                                double partmass = history[i].p().m();
+                                double partpt = history[i].p().pt();
+                                double inst = (daughtmass - partmass)/partmass + (daughtpt - partpt)/partpt;
+				stab = stabdown[daughter] + inst*log(partdist/daughtdist);
 			}
-			stability[i] += stab;
+			stabdown[i] = stab;
 		}
 
-                cnpy::npy_save("npyarrays/" + evtnum + "_stability.npy", &stability[0], {stability.size()}, "w");
+		std::vector<double>stability (size);
+		for (unsigned i=0; i<size; ++i) {
+			stability[i] = stabup[i] + stabdown[i];
+			//std::cout << "i: " << i << " stabup: " << stabup[i] << " stabdown: " << stabdown[i] << std::endl;
+		}
 
+                cnpy::npy_save("npyarrays/stability/" + evtnum + "_stability.npy", &stability[0], {stability.size()}, "w");
+
+		stability.clear();
 
 		return true;
 	}

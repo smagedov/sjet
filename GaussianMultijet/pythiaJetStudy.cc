@@ -27,6 +27,7 @@
 #include "ClusteringTreeExtender.hh"
 #include "StabilityCalc.hh"
 #include "ProbabilityCalc.hh"
+#include "EnergyFlowPolynomials.hh"
 
 // Utilities, etc
 #include "stringUtils.hh"
@@ -252,9 +253,10 @@ int main(int argc, char *argv[])
     mySequence.add(FullJetHistoryPrinter<MyEvent>("0", "pythiatHistFile", 1000, distanceCutoff));
     mySequence.add(PythiaClustering<MyEvent>(
                        "PythiaClustering", outputFile));
-    mySequence.add(JetHistoryCopy<MyEvent>("PythiaCopy"));
-    mySequence.add(ProbabilityCalc<MyEvent>("ProbabilityCalc"));
+    //mySequence.add(JetHistoryCopy<MyEvent>("PythiaCopy"));
+    //mySequence.add(ProbabilityCalc<MyEvent>("ProbabilityCalc"));
     //mySequence.add(StabilityCalc<MyEvent>("StabilityCalc"));
+    mySequence.add(EnergyFlowPolynomials<MyEvent>("EnergyFlowPolynomials"));
 
     // Print module labels in this analysis sequence
     std::cout << "Sequence of framework modules ("
