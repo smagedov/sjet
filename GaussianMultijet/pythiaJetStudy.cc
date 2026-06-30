@@ -28,6 +28,9 @@
 #include "StabilityCalc.hh"
 #include "ProbabilityCalc.hh"
 #include "EnergyFlowPolynomials.hh"
+#include "JetClusterMatcher.hh"
+#include "InvarientMoments.hh"
+#include "BlobbyStability.hh"
 
 // Utilities, etc
 #include "stringUtils.hh"
@@ -255,8 +258,11 @@ int main(int argc, char *argv[])
                        "PythiaClustering", outputFile));
     //mySequence.add(JetHistoryCopy<MyEvent>("PythiaCopy"));
     //mySequence.add(ProbabilityCalc<MyEvent>("ProbabilityCalc"));
+    //mySequence.add(JetClusterMatcher<MyEvent>("JetClusterMatcher"));
     //mySequence.add(StabilityCalc<MyEvent>("StabilityCalc"));
-    mySequence.add(EnergyFlowPolynomials<MyEvent>("EnergyFlowPolynomials"));
+    //mySequence.add(EnergyFlowPolynomials<MyEvent>("EnergyFlowPolynomials"));
+    //mySequence.add(InvarientMoments<MyEvent>("InvarientMoments"));
+    mySequence.add(BlobbyStability<MyEvent>("BlobbyStability"));
 
     // Print module labels in this analysis sequence
     std::cout << "Sequence of framework modules ("

@@ -58,7 +58,8 @@ public:
                 cnpy::npy_save("npyarrays/stabdists/" + evtnum + "_stabdists.npy", &stabdists[0], {stabdists.size()}, "w");
 
 		//Stability going up:
-		//const ParticleDeltaR dRcalculator;
+		const ParticleDeltaR dRcalculator;
+		double sigma = 0.4;
 		for (unsigned i=nParts[nGenClus-1]; i<size-1; ++i) {
 			int parent1 = history[i].parent1();
 			int parent2 = history[i].parent2();
@@ -77,8 +78,9 @@ public:
 				double partmass = history[i].p().m();
 				double partpt = history[i].p().pt();
 				double inst = (partmass - parentmass)/parentmass + (partpt - parentpt)/parentpt;
-				//double deltar = dRcalculator(history[parent].p(), history[i].p());
-				stab = stabup[parent] + inst*log(parentdist/partdist);
+				double deltar = dRcalculator(history[parent].p(), history[i].p());
+				double weight = 1 - std::exp(-(deltar*deltar)/(2*sigma*sigma));
+				stab = stabup[parent] + inst*weight;
 			}
 			stabup[i] = stab;
 		}
@@ -95,7 +97,9 @@ public:
                                 double partmass = history[i].p().m();
                                 double partpt = history[i].p().pt();
                                 double inst = (daughtmass - partmass)/partmass + (daughtpt - partpt)/partpt;
-				stab = stabdown[daughter] + inst*log(partdist/daughtdist);
+				double deltar = dRcalculator(history[daughter].p(), history[i].p());
+				double weight = 1 - std::exp(-(deltar*deltar)/(2*sigma*sigma));
+				stab = stabdown[daughter] + inst*weight;
 			}
 			stabdown[i] = stab;
 		}
