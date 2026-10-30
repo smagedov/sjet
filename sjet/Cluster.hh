@@ -2,6 +2,9 @@
 #define SJET_CLUSTER_HH_
 
 #include <cassert>
+#include <limits>
+#include <cmath>
+
 #include "objectPt.hh"
 
 namespace sjet {
