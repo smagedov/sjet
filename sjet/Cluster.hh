@@ -103,7 +103,7 @@ namespace sjet {
                    daughter_ == r.daughter_ &&
 		   prob_ == r.prob_ &&
 		   logprob_ == r.logprob_ &&
-		   log1mprob_ == r.logonemprob_;
+		   log1mprob_ == r.log1mprob_;
         }
 
     private:
