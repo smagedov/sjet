@@ -51,16 +51,16 @@ namespace sjet {
 
         void setProb(const double i_p) {
             assert(i_p >= 0.0 && i_p <= 1.0);
-            prob_ == i_p;
-            if (i_p == 0.0) {
+            prob_ = i_p;
+            if (prob_ == 0.0) {
                 logprob_ = std::log(std::numeric_limits<double>::min());
                 log1mprob_ = 0.0;
-            } else if (i_p == 1.0) {
+            } else if (prob_ == 1.0) {
                 logprob_ = 0.0;
                 log1mprob_ = std::log(std::numeric_limits<double>::min());
             } else {
-                logprob_ = std::log(i_p);
-                log1mprob_ = std::log(1.0 - i_p);
+                logprob_ = std::log(prob_);
+                log1mprob_ = std::log(1.0 - prob_);
             }
         };
 
