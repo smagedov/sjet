@@ -25,9 +25,10 @@ namespace sjet {
         template<class OldParticle>
         inline explicit Cluster(const Cluster<OldParticle>& c, const Particle& newpart)
             : p_(newpart), dist_(c.dist_), maxd_(c.maxd_),
-              scalarPtSum_(c.scalarPtSum_), nParticles_(c.nParticles()),
-              parent1_(c.parent1_), parent2_(c.parent2_), daughter_(c.daughter_), 
-              prob_(c.prob_), logprob_(c.logprob_), log1mprob_(c.log1mprob_) {}
+              scalarPtSum_(c.scalarPtSum_), prob_(c.prob_),
+              logprob_(c.logprob_), log1mprob_(c.log1mprob_),
+              nParticles_(c.nParticles()), parent1_(c.parent1_),
+              parent2_(c.parent2_), daughter_(c.daughter_) {}
 
         inline Cluster(const Cluster& c1, const int index1, 
                        const Cluster& c2, const int index2,
@@ -75,7 +76,7 @@ namespace sjet {
         inline int daughter() const {return daughter_;}
         inline double prob() const {return prob_;}
         inline double logprob() const {return logprob_;}
-        inline double log1emprob() const {return log1mprob_;}
+        inline double log1mprob() const {return log1mprob_;}
         inline bool hasParents() const
         {
             if (parent1_ >= 0)
@@ -97,13 +98,13 @@ namespace sjet {
                 dist_ == r.dist_ &&
                 maxd_ == r.maxd_ &&
                 scalarPtSum_ == r.scalarPtSum_ &&
+                prob_ == r.prob_ &&
+                logprob_ == r.logprob_ &&
+                log1mprob_ == r.log1mprob_ &&
                 nParticles_ == r.nParticles_ &&
                 parent1_ == r.parent1_ &&
                 parent2_ == r.parent2_ &&
-                daughter_ == r.daughter_ &&
-                prob_ == r.prob_ &&
-                logprob_ == r.logprob_ &&
-                log1mprob_ == r.log1mprob_;
+                daughter_ == r.daughter_;
         }
 
     private:
