@@ -19,7 +19,7 @@ namespace sjet {
         inline explicit Cluster(const Particle& originpart)
             : p_(originpart), dist_(-1.0), maxd_(-1.0),
               scalarPtSum_(objectPt(originpart)), nParticles_(1),
-              parent1_(-1), parent2_(-1), daughter_(0) {setProb(1.0)}
+              parent1_(-1), parent2_(-1), daughter_(0) {setProb(1.0);}
 
         // Copy-like constructor from another cluster type
         template<class OldParticle>
@@ -50,18 +50,18 @@ namespace sjet {
         };
 
 	void setProb(const double i_p) {
-		assert(i_p >= 0.0 && i_p <= 1.0);
-		prob_ == i_p;
-		if (i_p == 0.0) {
-			logprob_ = std::log(std::numeric_limits<double>::min());
-			log1mprob_ = 0.0;
-		} else if (i_p == 1.0) {
-			logprob_ = 0.0;
-			log1mprob_ = std::log(std::numeric_limits<double>::min());
-		} else {
-			logprob_ = std::log(i_p);
-			log1mprob_ = std::log(1.0 - i_p);
-		}
+            assert(i_p >= 0.0 && i_p <= 1.0);
+            prob_ == i_p;
+            if (i_p == 0.0) {
+                logprob_ = std::log(std::numeric_limits<double>::min());
+                log1mprob_ = 0.0;
+            } else if (i_p == 1.0) {
+                logprob_ = 0.0;
+                log1mprob_ = std::log(std::numeric_limits<double>::min());
+            } else {
+                logprob_ = std::log(i_p);
+                log1mprob_ = std::log(1.0 - i_p);
+            }
 	};
 
         // Inspectors
@@ -75,36 +75,36 @@ namespace sjet {
         inline int daughter() const {return daughter_;}
         inline double prob() const {return prob_;}
         inline double logprob() const {return logprob_;}
-	inline double log1emprob() const {return logonemprob_;}
+	inline double log1emprob() const {return log1mprob_;}
         inline bool hasParents() const
-        {
-            if (parent1_ >= 0)
             {
-                assert(parent2_ >= 0);
-                return true;
+                if (parent1_ >= 0)
+                {
+                    assert(parent2_ >= 0);
+                    return true;
+                }
+                else
+                {
+                    assert(parent2_ < 0);
+                    return false;
+                }
             }
-            else
-            {
-                assert(parent2_ < 0);
-                return false;
-            }
-        }
         inline bool hasDau() const {return daughter_ > 0;}
 
         inline bool operator==(const Cluster& r) const
-        {
-            return p_ == r.p_ &&
-                   dist_ == r.dist_ &&
-                   maxd_ == r.maxd_ &&
-                   scalarPtSum_ == r.scalarPtSum_ &&
-		   nParticles_ == r.nParticles_ &&
-                   parent1_ == r.parent1_ &&
-                   parent2_ == r.parent2_ &&
-                   daughter_ == r.daughter_ &&
-		   prob_ == r.prob_ &&
-		   logprob_ == r.logprob_ &&
-		   log1mprob_ == r.log1mprob_;
-        }
+            {
+                return p_ == r.p_ &&
+                    dist_ == r.dist_ &&
+                    maxd_ == r.maxd_ &&
+                    scalarPtSum_ == r.scalarPtSum_ &&
+                    nParticles_ == r.nParticles_ &&
+                    parent1_ == r.parent1_ &&
+                    parent2_ == r.parent2_ &&
+                    daughter_ == r.daughter_ &&
+                    prob_ == r.prob_ &&
+                    logprob_ == r.logprob_ &&
+                    log1mprob_ == r.log1mprob_;
+            }
 
     private:
         Particle p_;
@@ -117,7 +117,7 @@ namespace sjet {
 	unsigned nParticles_; // Number of original particles contained in this cluster
         double prob_;   // Probability
         double logprob_;// Log of the probability
-	double log1emprob_; // Log of the one minus probability 
+	double log1mprob_; // Log of the one minus probability 
         int parent1_;   // Parent 1 index, -1 if none
         int parent2_;   // Parent 2 index, -1 if none
         int daughter_;  // Daughter index,  0 if none
