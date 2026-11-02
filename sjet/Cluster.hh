@@ -27,20 +27,20 @@ namespace sjet {
             : p_(newpart), dist_(c.dist_), maxd_(c.maxd_),
               scalarPtSum_(c.scalarPtSum_), nParticles_(c.nParticles()),
               parent1_(c.parent1_), parent2_(c.parent2_), daughter_(c.daughter_), 
-	      prob_(c.prob_), logprob_(c.logprob_), log1mprob_(c.log1mprob_) {}
+              prob_(c.prob_), logprob_(c.logprob_), log1mprob_(c.log1mprob_) {}
 
         inline Cluster(const Cluster& c1, const int index1, 
                        const Cluster& c2, const int index2,
                        const double distance, const double maxdist)
             : p_(c1.p() + c2.p()), dist_(distance), maxd_(maxdist),
               scalarPtSum_(c1.scalarPtSum() + c2.scalarPtSum()),
-	      nParticles_(c1.nParticles() + c2.nParticles()),
+              nParticles_(c1.nParticles() + c2.nParticles()),
               parent1_(index1), parent2_(index2), daughter_(0) {
             assert(parent1_ >= 0);
             assert(parent2_ >= 0);
             assert(dist_ >= 0.0);
             assert(maxd_ >= 0.0);
-	    setProb(1.0);
+            setProb(1.0);
         }
 
         // Modifiers
@@ -49,7 +49,7 @@ namespace sjet {
             daughter_ = d;
         };
 
-	void setProb(const double i_p) {
+        void setProb(const double i_p) {
             assert(i_p >= 0.0 && i_p <= 1.0);
             prob_ == i_p;
             if (i_p == 0.0) {
@@ -62,20 +62,20 @@ namespace sjet {
                 logprob_ = std::log(i_p);
                 log1mprob_ = std::log(1.0 - i_p);
             }
-	};
+        };
 
         // Inspectors
         inline const Particle& p() const {return p_;}
         inline double dist() const {return dist_;}
         inline double maxDistanceSoFar() const {return maxd_;}
         inline double scalarPtSum() const {return scalarPtSum_;}
-	inline unsigned nParticles() const { return nParticles_; }
+        inline unsigned nParticles() const { return nParticles_; }
         inline int parent1() const {return parent1_;}
         inline int parent2() const {return parent2_;}
         inline int daughter() const {return daughter_;}
         inline double prob() const {return prob_;}
         inline double logprob() const {return logprob_;}
-	inline double log1emprob() const {return log1mprob_;}
+        inline double log1emprob() const {return log1mprob_;}
         inline bool hasParents() const
         {
             if (parent1_ >= 0)
@@ -116,14 +116,14 @@ namespace sjet {
                              // in the cluster
         double prob_;   // Probability
         double logprob_;// Log of the probability
-	double log1mprob_; // Log of the one minus probability 
-	unsigned nParticles_; // Number of original particles contained in this cluster
+        double log1mprob_; // Log of the one minus probability 
+        unsigned nParticles_; // Number of original particles contained in this cluster
         int parent1_;   // Parent 1 index, -1 if none
         int parent2_;   // Parent 2 index, -1 if none
         int daughter_;  // Daughter index,  0 if none
-	
-	template <class DistCalc, class SeqParticle>
-	friend class ClusteringSequence;
+        
+        template <class DistCalc, class SeqParticle>
+        friend class ClusteringSequence;
     };
 }
 
