@@ -77,34 +77,34 @@ namespace sjet {
         inline double logprob() const {return logprob_;}
 	inline double log1emprob() const {return log1mprob_;}
         inline bool hasParents() const
+        {
+            if (parent1_ >= 0)
             {
-                if (parent1_ >= 0)
-                {
-                    assert(parent2_ >= 0);
-                    return true;
-                }
-                else
-                {
-                    assert(parent2_ < 0);
-                    return false;
-                }
+                assert(parent2_ >= 0);
+                return true;
             }
+            else
+            {
+                assert(parent2_ < 0);
+                return false;
+            }
+        }
         inline bool hasDau() const {return daughter_ > 0;}
 
         inline bool operator==(const Cluster& r) const
-            {
-                return p_ == r.p_ &&
-                    dist_ == r.dist_ &&
-                    maxd_ == r.maxd_ &&
-                    scalarPtSum_ == r.scalarPtSum_ &&
-                    nParticles_ == r.nParticles_ &&
-                    parent1_ == r.parent1_ &&
-                    parent2_ == r.parent2_ &&
-                    daughter_ == r.daughter_ &&
-                    prob_ == r.prob_ &&
-                    logprob_ == r.logprob_ &&
-                    log1mprob_ == r.log1mprob_;
-            }
+        {
+            return p_ == r.p_ &&
+                dist_ == r.dist_ &&
+                maxd_ == r.maxd_ &&
+                scalarPtSum_ == r.scalarPtSum_ &&
+                nParticles_ == r.nParticles_ &&
+                parent1_ == r.parent1_ &&
+                parent2_ == r.parent2_ &&
+                daughter_ == r.daughter_ &&
+                prob_ == r.prob_ &&
+                logprob_ == r.logprob_ &&
+                log1mprob_ == r.log1mprob_;
+        }
 
     private:
         Particle p_;
@@ -114,10 +114,10 @@ namespace sjet {
                         // sequence, -1 if this is an original particle
         double scalarPtSum_; // Sum of scalar pt values of all particles
                              // in the cluster
-	unsigned nParticles_; // Number of original particles contained in this cluster
         double prob_;   // Probability
         double logprob_;// Log of the probability
 	double log1mprob_; // Log of the one minus probability 
+	unsigned nParticles_; // Number of original particles contained in this cluster
         int parent1_;   // Parent 1 index, -1 if none
         int parent2_;   // Parent 2 index, -1 if none
         int daughter_;  // Daughter index,  0 if none
