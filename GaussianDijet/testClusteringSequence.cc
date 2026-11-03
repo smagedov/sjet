@@ -59,6 +59,8 @@ static void run_test(const unsigned nTries,
         }
         assert(seq.clustHist() == seq2.clustHist());
 
+        double score = 0.0;
+        unsigned nProbClus = 0;
         if (maxDist > 0.0)
         {
             const std::vector<unsigned>& clusDist0 = seq2.clusterIndices();
@@ -83,12 +85,21 @@ static void run_test(const unsigned nTries,
             const std::vector<unsigned>& clusAssign2 = seq2.clusterAssignments(maxDist);
             assert(clusAssign2 == clusAssign0);
         }
+        else
+        {
+            const int lenHist = seq.clustHist().size();
+            for (int i=nParticles; i<lenHist; ++i)
+                seq.setProbability(i, drand48());
+            nProbClus = seq.bestScoreClusterIndices(seq.maxCusteredDistance()).size();
+        }
 
         std::cout << "\nEvent " << itry << std::endl;
         std::cout << "nParticles = " << seq.nParticles() << std::endl;
         std::cout << "nClusters = " << seq.nClusters() << std::endl;
+        std::cout << "nProbClus = " << nProbClus << std::endl;
         std::cout << "Last distance is " << seq.lastDistance() << std::endl;
         std::cout << "Next distance is " << seq.nextDistance() << std::endl;
+        std::cout << "Prob cluster score is " << score << std::endl;
         std::cout << "Recombination distances are:";
         const std::vector<double>& recoDist = seq.recombinationDistances();
         for (const double& d : recoDist)

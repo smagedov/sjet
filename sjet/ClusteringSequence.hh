@@ -216,6 +216,46 @@ namespace sjet {
             return result;
         }
 
+        // Clusters that we get by maximizing the score of
+        // the clustering tree. Clusters made at distance larger
+        // than "maxDistance" will be split no matter what is
+        // the change in the score associated with that split.
+        //
+        // This function will work only if the clustering sequence
+        // is run to the end (so that only one node remains at the
+        // top) and only after the probabilities are assigned to all
+        // recombined clusters via the "setProbability" method.
+        //
+        // The function returns the set of nodes that should
+        // be associated with clusters. The score will be returned
+        // as well if the "bestScore" pointer is not null. The
+        // score divided by the number of recombinations (that is,
+        // the number of particles minus 1) might be a useful
+        // quantity for characterizing the quality of the cluster
+        // assignment.
+        std::vector<unsigned> bestScoreClusterIndices(const double maxDistance,
+                                                      double* bestScore = nullptr) const
+        {
+            if (1U != nClusters_)
+                throw std::runtime_error("In sjet::ClusteringSequence::bestScoreClusterIndices : "
+                                         "please run the recombination sequence to completion");
+            const int lenHist = clustHist_.size();
+            assert(lenHist == 2*nParticles_ - 1);
+            std::vector<long double> logProbSums(lenHist);
+            for (int i=0; i<nParticles_; ++i)
+                logProbSums[i] = clustHist_[i].logprob();
+            for (int i=nParticles_; i<lenHist; ++i)
+                logProbSums[i] = clustHist_[i].logprob() +
+                    logProbSums[clustHist_[i].parent1()] +
+                    logProbSums[clustHist_[i].parent2()];
+            std::vector<unsigned> bestNodes;
+            const long double score = maxScoreNodes(
+                logProbSums, maxDistance, lenHist-1, &bestNodes);
+            if (bestScore)
+                *bestScore = score;
+            return bestNodes;
+        }
+
         // Cluster assignments of initial particles in the
         // complete clustering history
         std::vector<unsigned> clusterAssignments() const
@@ -406,6 +446,35 @@ namespace sjet {
             const int dau = clus.daughter();
             if (dau && dau < maxClus)
                 visitNodeAndDaus2(visitor, dau, maxClus);
+        }
+
+        long double maxScoreNodes(const std::vector<long double>& logProbSums,
+                                  const double maxdist,
+                                  const unsigned node,
+                                  std::vector<unsigned>* bestNodes) const
+        {
+            assert(bestNodes);
+            bestNodes->clear();
+            const cluster_type& nodeCluster(clustHist_[node]);
+            const long double nodeScore = logProbSums[node];
+            if (nodeCluster.hasParents())
+            {
+                std::vector<unsigned> parent1Nodes, parent2Nodes;
+                const long double splitScore =
+                    maxScoreNodes(logProbSums, maxdist,
+                                  nodeCluster.parent1(), &parent1Nodes) +
+                    maxScoreNodes(logProbSums, maxdist,
+                                  nodeCluster.parent2(), &parent2Nodes) +
+                    nodeCluster.log1mprob();
+                if (splitScore > nodeScore || nodeCluster.dist() > maxdist)
+                {
+                    bestNodes->insert(bestNodes->end(), parent1Nodes.begin(), parent1Nodes.end());
+                    bestNodes->insert(bestNodes->end(), parent2Nodes.begin(), parent2Nodes.end());
+                    return splitScore;
+                }
+            }
+            bestNodes->push_back(node);
+            return nodeScore;
         }
 
         DistCalc distCalc_;
