@@ -96,11 +96,11 @@ namespace sjet {
 
         inline double getLogProbability(const int nodeid) const {
             return clustHist_.at(nodeid).logprob();
-	}
+        }
 
         inline double getLog1MProbability(const int nodeid) const {
             return clustHist_.at(nodeid).log1mprob();
-	}
+        }
 
         inline double getProbability(const int nodeid) const {
             return clustHist_.at(nodeid).prob();
