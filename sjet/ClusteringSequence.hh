@@ -496,7 +496,6 @@ namespace sjet {
                                   std::vector<unsigned>* bestNodes) const
         {
             assert(bestNodes);
-            bestNodes->clear();
             const cluster_type& nodeCluster(clustHist_[node]);
             const long double nodeScore = logProbSums[node];
             if (nodeCluster.hasParents())
