@@ -90,7 +90,10 @@ static void run_test(const unsigned nTries,
             const int lenHist = seq.clustHist().size();
             for (int i=nParticles; i<lenHist; ++i)
                 seq.setProbability(i, drand48());
-            nProbClus = seq.bestScoreClusterIndices(seq.maxCusteredDistance()).size();
+            const std::vector<unsigned>& clusNodes =
+                seq.bestScoreClusterIndices(seq.maxCusteredDistance(), &score);
+            nProbClus = clusNodes.size();
+            seq.bestScoreClusterAssignments(clusNodes);
         }
 
         std::cout << "\nEvent " << itry << std::endl;

@@ -216,8 +216,8 @@ namespace sjet {
             return result;
         }
 
-        // Clusters that we get by maximizing the score of
-        // the clustering tree. Clusters made at distance larger
+        // Clusters that we get by maximizing the score of the
+        // clustering tree. Clusters made at a distance larger
         // than "maxDistance" will be split no matter what is
         // the change in the score associated with that split.
         //
@@ -249,10 +249,12 @@ namespace sjet {
                     logProbSums[clustHist_[i].parent1()] +
                     logProbSums[clustHist_[i].parent2()];
             std::vector<unsigned> bestNodes;
-            const long double score = maxScoreNodes(
+            const double score = maxScoreNodes(
                 logProbSums, maxDistance, lenHist-1, &bestNodes);
             if (bestScore)
                 *bestScore = score;
+            if (!is_sorted_uvec(bestNodes))
+                std::sort(bestNodes.begin(), bestNodes.end());
             return bestNodes;
         }
 
@@ -306,6 +308,22 @@ namespace sjet {
                     }
                 }
             }
+            return result;
+        }
+
+        // Cluster assignments of initial particles in case the cluster
+        // nodes were obtained by calling the "bestScoreClusterIndices"
+        // method. The "clusterNodes" argument is the vector returned
+        // by that method.
+        std::vector<unsigned> bestScoreClusterAssignments(
+            const std::vector<unsigned>& clusterNodes) const
+        {
+            if (1U != nClusters_)
+                throw std::runtime_error("In sjet::ClusteringSequence::bestScoreClusterAssignments : "
+                                         "please run the recombination sequence to completion");
+            std::vector<unsigned> result(nParticles_);
+            for (int i=0; i<nParticles_; ++i)
+                result[i] = topDauFromVec(i, clusterNodes);
             return result;
         }
 
@@ -372,6 +390,17 @@ namespace sjet {
         typedef std::pair<double, IndexPair> DistElem;
         typedef std::set<DistElem> DistSet;
 
+        static bool is_sorted_uvec(const std::vector<unsigned>& v)
+        {
+            const unsigned sz = v.size();
+            if (sz < 2U)
+                return true;
+            for (unsigned i=1U; i<sz; ++i)
+                if (v[i-1U] > v[i])
+                    return false;
+            return true;
+        }
+
         void reset() {
             clustHist_.clear();
             distSet_.clear();
@@ -412,6 +441,19 @@ namespace sjet {
                 return particleInd;
             else
                 return topDau(dau, maxClus);
+        }
+
+        unsigned topDauFromVec(const unsigned particleInd,
+                               const std::vector<unsigned>& clusterNodes) const
+        {
+            if (std::binary_search(clusterNodes.begin(), clusterNodes.end(), particleInd))
+                return particleInd;
+            const int dau = clustHist_[particleInd].daughter();
+            // If dau is 0, we are at the top node of the tree.
+            // This should never happen under expected usage
+            // of this function.
+            assert(dau > 0);
+            return topDauFromVec(dau, clusterNodes);
         }
 
         std::string run_msg(const std::string& where, const double dist) const
