@@ -33,9 +33,9 @@ namespace sjet {
         inline Cluster(const Cluster& c1, const int index1, 
                        const Cluster& c2, const int index2,
                        const double distance, const double maxdist)
-            : p_(c1.p() + c2.p()), dist_(distance), maxd_(maxdist),
-              scalarPtSum_(c1.scalarPtSum() + c2.scalarPtSum()),
-              nParticles_(c1.nParticles() + c2.nParticles()),
+            : p_(c1.p_ + c2.p_), dist_(distance), maxd_(maxdist),
+              scalarPtSum_(c1.scalarPtSum_ + c2.scalarPtSum_),
+              nParticles_(c1.nParticles_ + c2.nParticles_),
               parent1_(index1), parent2_(index2), daughter_(0) {
             assert(parent1_ >= 0);
             assert(parent2_ >= 0);
@@ -45,12 +45,14 @@ namespace sjet {
         }
 
         // Modifiers
-        inline void setDaughter(const int d) {
+        inline void setDaughter(const int d)
+        {
             assert(d > 0);
             daughter_ = d;
         };
 
-        void setProb(const double i_p) {
+        void setProb(const double i_p)
+        {
             assert(i_p >= 0.0 && i_p <= 1.0);
             prob_ = i_p;
             if (prob_ == 0.0) {
@@ -70,13 +72,14 @@ namespace sjet {
         inline double dist() const {return dist_;}
         inline double maxDistanceSoFar() const {return maxd_;}
         inline double scalarPtSum() const {return scalarPtSum_;}
-        inline unsigned nParticles() const { return nParticles_; }
+        inline unsigned nParticles() const {return nParticles_;}
         inline int parent1() const {return parent1_;}
         inline int parent2() const {return parent2_;}
         inline int daughter() const {return daughter_;}
         inline double prob() const {return prob_;}
         inline double logprob() const {return logprob_;}
         inline double log1mprob() const {return log1mprob_;}
+        inline bool hasDau() const {return daughter_ > 0;}
         inline bool hasParents() const
         {
             if (parent1_ >= 0)
@@ -90,21 +93,20 @@ namespace sjet {
                 return false;
             }
         }
-        inline bool hasDau() const {return daughter_ > 0;}
 
         inline bool operator==(const Cluster& r) const
         {
             return p_ == r.p_ &&
-                dist_ == r.dist_ &&
-                maxd_ == r.maxd_ &&
-                scalarPtSum_ == r.scalarPtSum_ &&
-                prob_ == r.prob_ &&
-                logprob_ == r.logprob_ &&
-                log1mprob_ == r.log1mprob_ &&
-                nParticles_ == r.nParticles_ &&
-                parent1_ == r.parent1_ &&
-                parent2_ == r.parent2_ &&
-                daughter_ == r.daughter_;
+                   dist_ == r.dist_ &&
+                   maxd_ == r.maxd_ &&
+                   scalarPtSum_ == r.scalarPtSum_ &&
+                   prob_ == r.prob_ &&
+                   logprob_ == r.logprob_ &&
+                   log1mprob_ == r.log1mprob_ &&
+                   nParticles_ == r.nParticles_ &&
+                   parent1_ == r.parent1_ &&
+                   parent2_ == r.parent2_ &&
+                   daughter_ == r.daughter_;
         }
 
     private:
@@ -122,7 +124,7 @@ namespace sjet {
         int parent1_;   // Parent 1 index, -1 if none
         int parent2_;   // Parent 2 index, -1 if none
         int daughter_;  // Daughter index,  0 if none
-        
+
         template <class DistCalc, class SeqParticle>
         friend class ClusteringSequence;
     };
